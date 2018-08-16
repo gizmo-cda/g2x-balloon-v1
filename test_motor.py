@@ -5,6 +5,7 @@ import sys
 import time
 import atexit
 import RPi.GPIO as GPIO
+import math
 
 # configuraion
 MOTOR_0 = (12, 13)   # direction, drive
@@ -30,18 +31,27 @@ def shutdown():
     print("shutdown")
 
 
-def revolve(direction):
-    for _ in range(0, 2048):
+def revolve(direction, frequency, duration):
+    if frequency <= 0 or duration <= 0:
+        time.sleep(duration)
+        return
+
+    count = int(duration * frequency)
+    up_delay = 0.5 / frequency
+
+    print(count, up_delay)
+
+    for _ in range(0, count):
         GPIO.output(MOTOR_0[DIRECTION], direction)
         GPIO.output(MOTOR_1[DIRECTION], direction)
 
         GPIO.output(MOTOR_0[DRIVE], True)
         GPIO.output(MOTOR_1[DRIVE], True)
-        time.sleep(PULSE_TIME)
+        time.sleep(up_delay)
 
         GPIO.output(MOTOR_0[DRIVE], False)
         GPIO.output(MOTOR_1[DRIVE], False)
-        time.sleep(WAIT_TIME)
+        time.sleep(up_delay)
 
 
 if __name__ == "__main__":
@@ -53,6 +63,11 @@ if __name__ == "__main__":
 
     init_gpio()
 
-    revolve(False)
-    revolve(True)
+    step = math.log10(1000)
+
+    while step <= math.log10(1000000):
+        freq = int(math.pow(10, step))
+        print(freq)
+        revolve(True, freq, 0.1)
+        step += 0.05
     
