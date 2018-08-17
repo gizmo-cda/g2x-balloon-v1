@@ -1,5 +1,5 @@
 [Unit]
-Description=G2X Balloon Camera Service
+Description=G2X Camera Service
 
 [Service]
 ExecStart=/usr/bin/python3 /home/pi/app/camera
@@ -8,7 +8,7 @@ Restart=always
 RestartSec=10
 StandardOutput=syslog
 StandardError=syslog
-SyslogIdentifier=g2x-balloon-service
+SyslogIdentifier=g2x-camera
 #User=<alternate user>
 #Group=<alternate group>
 
