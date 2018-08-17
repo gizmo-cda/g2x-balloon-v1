@@ -18,7 +18,7 @@ ser = serial.Serial(
 )
 
 # read data forever
-while 1:
+while True:
     ser.flushInput()
     text = ser.readline()
     data = text.decode('UTF-8').strip().split(' ')
