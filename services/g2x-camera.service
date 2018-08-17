@@ -2,14 +2,14 @@
 Description=G2X Camera Service
 
 [Service]
-ExecStart=/usr/bin/python3 /home/pi/app/camera
+ExecStart=/usr/bin/python3 /home/pi/app/camera.py
 WorkingDirectory=/home/pi/app
 Restart=always
 RestartSec=10
 StandardOutput=syslog
 StandardError=syslog
 SyslogIdentifier=g2x-camera
-#User=<alternate user>
+User=pi
 #Group=<alternate group>
 
 [Install]

@@ -27,7 +27,7 @@ while True:
         with open(output_path, 'a') as output:
             output.write("{},{}\r\n".format(
                 time.strftime("%Y/%m/%d %H:%M:%S"),
-                join(",", data[2:10])
+                ",".join(data[2:10])
             ))
 
     time.sleep(delay);

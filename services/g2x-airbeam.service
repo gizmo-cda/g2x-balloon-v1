@@ -1,0 +1,16 @@
+[Unit]
+Description=G2X Airbeam2 Service
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/app/air_quality_logger.py
+WorkingDirectory=/home/pi/app
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=g2x-airbeam
+User=pi
+#Group=<alternate group>
+
+[Install]
+WantedBy=multi-user.target
