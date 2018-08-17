@@ -6,17 +6,16 @@ import serial
 
 # configuration
 delay = 5
-timestamp = int(time.time())
-output_path = filename = "g2x-balloon-{}.csv".format(timestamp)
+output_path = "g2x-balloon-{}.csv".format(int(time.time()))
 
 # open serial connection
 ser = serial.Serial(
-    port='/dev/ttyACM0',
+    port     = '/dev/ttyACM0',
     baudrate = 9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    timeout=1
+    parity   = serial.PARITY_NONE,
+    stopbits = serial.STOPBITS_ONE,
+    bytesize = serial.EIGHTBITS,
+    timeout  = 1
 )
 
 # read data forever
