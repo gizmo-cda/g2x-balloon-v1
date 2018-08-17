@@ -4,16 +4,26 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-unsigned long frequency = 1000000;
+unsigned long frequency = 1000;
+//unsigned int speeds[] = { 1000, 5000, 7500, 10000, 12500, 14000, 16000, 18000 };
 
 void setup() {
     pinMode(9,1);
     pinMode(10,1);
-    DFG(frequency);
-    Serial.begin(9600);
+    
+    Serial.begin(57600);
 }
 
-void loop() {}
+void loop() {
+  unsigned long freq = 100;
+  
+  while (freq <= 1000000) {
+    //Serial.println(freq);
+    DFG(freq);
+    delay(62.5);
+    freq += 25;
+  }
+}
 
 void DFG(unsigned long tempfreq) {
     // disable interupts
