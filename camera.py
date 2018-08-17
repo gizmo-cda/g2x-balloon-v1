@@ -91,3 +91,7 @@ if __name__ == "__main__":
 
         print("recording")
         camera.toggle_record()
+
+        while True:
+            time.sleep(1)
+
