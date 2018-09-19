@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>earth</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				background: #000;
+				padding: 0px;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+		<script src="js/three.js"></script>
+	</head>
+	<body>
+		<script>
+			var camera, scene, renderer;
+			var meshPlanet, meshClouds;
+
+			var radius = 6378;
+			var tilt = 0.41;
+			var rotationSpeed = 0.02;
+			var cloudsScale = 1.005;
+
+			var clock = new THREE.Clock();
+
+			init();
+			animate();
+
+			function init() {
+				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 50, 1e7);
+				camera.position.z = radius * 3;
+
+				scene = new THREE.Scene();
+
+				var dirLight = new THREE.DirectionalLight(0xffffff);
+				dirLight.position.set(-1, 0, 1).normalize();
+				scene.add(dirLight);
+				
+				var textureLoader = new THREE.TextureLoader();
+
+				var materialNormalMap = new THREE.MeshPhongMaterial({
+					specular: 0x333333,
+					shininess: 15,
+					map: textureLoader.load("textures/planets/earth_atmos_4096.jpg"),
+					specularMap: textureLoader.load("textures/planets/earth_specular_2048.jpg"),
+					normalMap: textureLoader.load("textures/planets/earth_normal_2048.jpg"),
+					normalScale: new THREE.Vector2(0.85, 0.85)
+				});
+
+				// planet
+				var geometry = new THREE.SphereBufferGeometry(radius, 100, 50);
+				meshPlanet = new THREE.Mesh(geometry, materialNormalMap);
+				meshPlanet.rotation.y = 0;
+				meshPlanet.rotation.z = tilt;
+				scene.add(meshPlanet);
+
+				// clouds
+				var materialClouds = new THREE.MeshLambertMaterial({
+					map: textureLoader.load("textures/planets/earth_clouds_1024.png"),
+					transparent: true
+				});
+
+				meshClouds = new THREE.Mesh(geometry, materialClouds);
+				meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
+				meshClouds.rotation.z = tilt;
+				scene.add(meshClouds);
+
+				// renderer
+				renderer = new THREE.WebGLRenderer({ antialias: true });
+				renderer.setPixelRatio(window.devicePixelRatio);
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				document.body.appendChild(renderer.domElement);
+
+				// resize events
+				window.addEventListener('resize', onWindowResize, false);
+			}
+
+			function onWindowResize(event) {
+				renderer.setSize(window.innerWidth, window.innerHeight);
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+			}
+
+			function animate() {
+				requestAnimationFrame(animate);
+				render();
+			}
+
+			function render() {
+				// rotate the planet and clouds
+				var delta = clock.getDelta();
+
+				meshPlanet.rotation.y += rotationSpeed * delta;
+				meshClouds.rotation.y += 1.25 * rotationSpeed * delta;
+
+				renderer.render( scene, camera );
+			}
+		</script>
+	</body>
+</html>
