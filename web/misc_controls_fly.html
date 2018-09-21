@@ -20,7 +20,7 @@
 			var meshPlanet, meshClouds;
 
 			var radius = 6378;
-			var tilt = 0.41;
+			var tilt = 0.40909262775014904;		// 23.439281 degrees
 			var rotationSpeed = 0.02;
 			var cloudsScale = 1.005;
 
@@ -30,15 +30,18 @@
 			animate();
 
 			function init() {
+				// camera
 				camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 50, 1e7);
 				camera.position.z = radius * 3;
 
 				scene = new THREE.Scene();
 
+				// lighting
 				var dirLight = new THREE.DirectionalLight(0xffffff);
 				dirLight.position.set(-1, 0, 1).normalize();
 				scene.add(dirLight);
 				
+				// scene
 				var textureLoader = new THREE.TextureLoader();
 
 				var materialNormalMap = new THREE.MeshPhongMaterial({

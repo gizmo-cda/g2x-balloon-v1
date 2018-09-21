@@ -19,9 +19,7 @@ def prime_vertical_radius_of_curvature(latitude_radians):
     return semi_major_axis / sqrt(1.0 - ee * sin_lat**2)
 
 
-def wgs84_to_ecef(latitude_degrees, longitude_degrees, height_meters):
-    latitude_radians = radians(latitude_degrees)
-    longitude_radians = radians(longitude_degrees)
+def wgs84_to_ecef(latitude_radians, longitude_radians, height_meters):
     N = prime_vertical_radius_of_curvature(latitude_radians)
 
     return (
@@ -31,18 +29,38 @@ def wgs84_to_ecef(latitude_degrees, longitude_degrees, height_meters):
     )
 
 
+def point_on_surface(latitude_radians, longitude_radians):
+    u = latitude_radians
+    v = longitude_radians
+
+    return (
+        semi_major_axis * cos(u) * cos(v),
+        semi_major_axis * cos(u) * sin(v),
+        semi_minor_axis * sin(u)
+    )
+
+
 if __name__ == "__main__":
     from operator import sub
 
     meters_per_foot = 0.304_800
 
-    for height in (0.0, 2191.0, 100_000.0):
-        cda_lat = 47.677_680_000
-        cda_long = -116.780_470_000
-        cda_height = height * meters_per_foot
+    cda_lat = 47.677_680_000
+    cda_long = -116.780_470_000
 
-        p1 = wgs84_to_ecef(cda_lat, cda_long, cda_height)
-        p2 = wgs84_to_ecef(cda_lat, cda_long, cda_height + 1.0)
+    cda_lat_radians = radians(cda_lat)
+    cda_long_radians = radians(cda_long)
+
+    p3 = point_on_surface(cda_lat_radians, cda_long_radians)
+    print("p3 =", p3)
+    print()
+
+    for cda_height in (0.0, 2191.0, 100_000.0):
+        cda_height_meters = cda_height * meters_per_foot
+
+        p1 = wgs84_to_ecef(cda_lat_radians, cda_long_radians, cda_height_meters)
+        p2 = wgs84_to_ecef(cda_lat_radians, cda_long_radians, cda_height_meters + 1.0)
+
 
         normal = tuple(map(sub, p2, p1))
         length = sqrt(normal[0]**2 + normal[1]**2 + normal[2]**2)
