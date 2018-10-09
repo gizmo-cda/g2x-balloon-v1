@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[      4947,        152]
-NotebookOptionsPosition[      4299,        123]
-NotebookOutlinePosition[      4655,        139]
-CellTagsIndexPosition[      4612,        136]
+NotebookDataLength[      7059,        220]
+NotebookOptionsPosition[      6076,        179]
+NotebookOutlinePosition[      6435,        195]
+CellTagsIndexPosition[      6392,        192]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -63,18 +63,18 @@ Cell[BoxData[
      RowBox[{"-", "116.78047`"}], ",", "668"}], "}"}], 
    ",", "\<\"WGS84Original\"\>"}], "]"}]], "Output",
  CellChangeTimes->{{3.745964821749834*^9, 3.7459648449724407`*^9}, {
-  3.745965287653923*^9, 3.7459652999952707`*^9}}]
+   3.745965287653923*^9, 3.7459652999952707`*^9}, 3.7465447874941053`*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"p", " ", "=", 
+ RowBox[{"p1", " ", "=", 
   RowBox[{"GeoPositionXYZ", "[", "cda", "]"}]}]], "Input",
  CellChangeTimes->{{3.745964853601789*^9, 3.745964916171167*^9}, {
-  3.7459649943225813`*^9, 3.745964994993222*^9}, {3.7459650673906727`*^9, 
-  3.745965088321426*^9}, {3.74596518557483*^9, 3.745965201071723*^9}, {
-  3.74596533239933*^9, 3.74596533484846*^9}}],
+   3.7459649943225813`*^9, 3.745964994993222*^9}, {3.7459650673906727`*^9, 
+   3.745965088321426*^9}, {3.74596518557483*^9, 3.745965201071723*^9}, {
+   3.74596533239933*^9, 3.74596533484846*^9}, 3.7465447846932383`*^9}],
 
 Cell[BoxData[
  RowBox[{"GeoPositionXYZ", "[", 
@@ -86,43 +86,99 @@ Cell[BoxData[
     "}"}], ",", "\<\"WGS84Original\"\>"}], "]"}]], "Output",
  CellChangeTimes->{{3.74596507144167*^9, 3.745965090900239*^9}, {
    3.745965186601506*^9, 3.745965201829646*^9}, {3.745965292098925*^9, 
-   3.7459653019141293`*^9}, 3.745965335316477*^9}]
+   3.7459653019141293`*^9}, 3.745965335316477*^9, 3.746544790050473*^9}]
 }, Open  ]],
 
 Cell[CellGroupData[{
 
 Cell[BoxData[
- RowBox[{"NumberForm", "[", 
-  RowBox[{"p", ",", " ", "20"}], "]"}]], "Input",
- CellChangeTimes->{{3.745965436998871*^9, 3.745965443540976*^9}}],
-
-Cell[BoxData[
- TagBox[
-  RowBox[{"GeoPositionXYZ", "[", 
+ RowBox[{"balloon", "=", 
+  RowBox[{"GeoPosition", "[", 
    RowBox[{
     RowBox[{"{", 
-     RowBox[{
-      InterpretationBox[
-       RowBox[{"\<\"-1.93869631912478\"\>", "\[Times]", 
-        SuperscriptBox["10", "\<\"6\"\>"]}],
-       -1.9386963191247804`*^6,
-       AutoDelete->True], ",", 
-      InterpretationBox[
-       RowBox[{"\<\"-3.841219235683517\"\>", "\[Times]", 
-        SuperscriptBox["10", "\<\"6\"\>"]}],
-       -3.841219235683517*^6,
-       AutoDelete->True], ",", 
-      InterpretationBox[
-       RowBox[{"\<\"4.693315239161975\"\>", "\[Times]", 
-        SuperscriptBox["10", "\<\"6\"\>"]}],
-       4.693315239161975*^6,
-       AutoDelete->True]}], "}"}], ",", "\<\"WGS84Original\"\>"}], "]"}],
-  NumberForm[#, 20]& ]], "Output",
- CellChangeTimes->{3.7459654444464617`*^9}]
+     RowBox[{"48", ",", " ", 
+      RowBox[{"-", "116.780470000"}], ",", " ", "30480"}], "}"}], ",", " ", 
+    "\"\<WGS84Original\>\""}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7465447340173597`*^9, 3.746544778810546*^9}, {
+  3.7465458408750668`*^9, 3.7465458416187477`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"GeoPosition", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"48", ",", 
+     RowBox[{"-", "116.78047`"}], ",", "30480"}], "}"}], 
+   ",", "\<\"WGS84Original\"\>"}], "]"}]], "Output",
+ CellChangeTimes->{{3.746544779235366*^9, 3.746544791195292*^9}, 
+   3.7465458425357113`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"p2", " ", "=", " ", 
+  RowBox[{"GeoPositionXYZ", "[", "balloon", "]"}]}]], "Input",
+ CellChangeTimes->{{3.746544792466549*^9, 3.746544799958675*^9}}],
+
+Cell[BoxData[
+ RowBox[{"GeoPositionXYZ", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "1.9357136191218665`*^6"}], ",", 
+     RowBox[{"-", "3.8353094887507744`*^6"}], ",", "4.739527384395957`*^6"}], 
+    "}"}], ",", "\<\"WGS84Original\"\>"}], "]"}]], "Output",
+ CellChangeTimes->{3.74654480043489*^9, 3.746545846377509*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"GeoPositionENU", "[", 
+  RowBox[{"cda", ",", " ", "balloon"}], "]"}]], "Input",
+ CellChangeTimes->{{3.74654480324762*^9, 3.74654482792799*^9}}],
+
+Cell[BoxData[
+ RowBox[{"GeoPositionENU", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"2.9240254661999643`*^-10", ",", 
+     RowBox[{"-", "35841.422798751475`"}], ",", 
+     RowBox[{"-", "29912.813090785174`"}]}], "}"}], ",", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"48", ",", 
+       RowBox[{"-", "116.78047`"}], ",", "30480"}], "}"}], 
+     ",", "\<\"WGS84Original\"\>"}], "]"}]}], "]"}]], "Output",
+ CellChangeTimes->{3.746544828494136*^9, 3.74654584873879*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"GeoPositionENU", "[", 
+  RowBox[{"balloon", ",", " ", "cda"}], "]"}]], "Input",
+ CellChangeTimes->{{3.746544850317697*^9, 3.746544856359836*^9}}],
+
+Cell[BoxData[
+ RowBox[{"GeoPositionENU", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"-", "2.9240254661999643`*^-10"}], ",", "36009.130663692216`", 
+     ",", "29710.713288109593`"}], "}"}], ",", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"47.67768`", ",", 
+       RowBox[{"-", "116.78047`"}], ",", "668"}], "}"}], 
+     ",", "\<\"WGS84Original\"\>"}], "]"}]}], "]"}]], "Output",
+ CellChangeTimes->{3.7465448569002237`*^9, 3.746545869341056*^9}]
 }, Open  ]]
 },
 WindowSize->{808, 911},
-WindowMargins->{{56, Automatic}, {130, Automatic}},
+WindowMargins->{{Automatic, 419}, {-1035, Automatic}},
 FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
 2016)",
 StyleDefinitions->"Default.nb"
@@ -144,15 +200,27 @@ Cell[723, 26, 977, 15, 80, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
 Cell[1737, 46, 361, 9, 28, "Input"],
-Cell[2101, 57, 330, 8, 28, "Output"]
+Cell[2101, 57, 355, 8, 28, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[2468, 70, 357, 6, 28, "Input"],
-Cell[2828, 78, 467, 10, 35, "Output"]
+Cell[2493, 70, 385, 6, 28, "Input"],
+Cell[2881, 78, 489, 10, 35, "Output"]
 }, Open  ]],
 Cell[CellGroupData[{
-Cell[3332, 93, 158, 3, 28, "Input"],
-Cell[3493, 98, 790, 22, 68, "Output"]
+Cell[3407, 93, 378, 9, 28, "Input"],
+Cell[3788, 104, 300, 8, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4125, 117, 173, 3, 28, "Input"],
+Cell[4301, 122, 342, 8, 35, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4680, 135, 167, 3, 28, "Input"],
+Cell[4850, 140, 504, 13, 56, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5391, 158, 169, 3, 28, "Input"],
+Cell[5563, 163, 497, 13, 56, "Output"]
 }, Open  ]]
 }
 ]
