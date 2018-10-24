@@ -108,6 +108,27 @@ def normal_on_surface(latitude_radians, longitude_radians):
         p4[2] / length
     )
 
+def conv_deghms_2_radians(deg, minute, second):
+    deg_sec = second / 3600.
+    deg_minute = minute / 60.
+    deg_all = deg + deg_minute + deg_sec
+    # print(deg, minute, second)
+    return deg_all
+conv_deghms_2_radians(deg=47, minute=40, second=31.89)
+conv_deghms_2_radians(deg=116, minute=47, second=42.79)
+conv_deghms_2_radians(deg=47, minute=40, second=32.63)
+conv_deghms_2_radians(deg=116, minute=47, second=42.76)
+                      
+                      # center parking line north cement meridian end barrier
+    # lat, long, height
+    #  47 40 31.89
+    # 116 47 42.79
+    # elev 2139 ft
+    #
+    # center parking line north cement meridian end barrier
+    #  47 40 32.63 N
+    # 116 47 42.76 W
+    # elev 2139 ft
 
 if __name__ == "__main__":
     # lat, long, height
