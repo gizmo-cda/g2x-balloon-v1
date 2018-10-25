@@ -5,3 +5,5 @@
 *.csv
 
 .idea
+state_dir/*
+.vscode/*
