@@ -73,6 +73,36 @@ def read_gps_state(fp_abs):
     gps_pt = wgs84tup(**_json.loads(state_text))
     return gps_pt
 
+def haversine(lat1_rad, lon1_rad, lat2_rad, lon2_rad):
+    """
+    Calculate distances
+    """
+    # earth_radius_km = 6_372.8  # Earth radius in kilometers
+    earth_radius_ft = 20_908_136.5  # Earth radius in ft
+
+    delta_lat_rad = lat2_rad - lat1_rad
+    delta_lon_rad = lon2_rad - lon1_rad
+
+    a = _math.sin(delta_lat_rad / 2.)**2 + \
+        _math.cos(lat1_rad) * _math.cos(lat2_rad) * _math.sin(delta_lon_rad / 2.)**2
+
+    c = 2 * _math.asin(_math.sqrt(a))
+    mag_ft = earth_radius_ft * c
+
+    opp = _math.sin(lon2_rad - lon1_rad) * _math.cos(lat2_rad)
+    adj = _math.cos(lat1_rad) * _math.sin(lat2_rad) - \
+        _math.sin(lat1_rad) * _math.cos(lat2_rad) * _math.cos(delta_lon_rad)
+    bearing_rad = _math.atan2(opp, adj)
+
+    x_ft = mag_ft * _math.sin(bearing_rad)
+    y_ft = mag_ft * _math.cos(bearing_rad)
+
+    bearing_deg = _math.degrees(bearing_rad)
+    bearing_deg = bearing_deg % 360
+
+    latitude_rad_per_ft = _math.radians(1. / 364_796.8001911596)
+    longitude_rad_per_ft = _math.radians(1. / 244_833.2546460106)
+
 
 class TwoGps(object):
     def __init__(self, state_dir=None, gps1=None, gps2=None):
@@ -133,6 +163,12 @@ if __name__ == '__main__':
     )
 
     tgps = TwoGps(gps1=_gps1, gps2=_gps2)
+    lat1_rad = _gps1.latitude_rad
+    lon1_rad = _gps1.longitude_rad
+    lat2_rad = _gps2.latitude_rad
+    lon2_rad = _gps2.longitude_rad
+
+
 #    print(tgps.gps1_state_fpabs)
 #    fp_abs = tgps.gps1_state_fpabs
 #    gps = _gps1
