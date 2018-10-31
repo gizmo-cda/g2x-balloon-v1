@@ -120,7 +120,11 @@ class TwoGps(object):
             self.state_dir.mkdir(parents=False, exist_ok=True)
         self.gps1_state_fpabs = self.state_dir / 'gps1_state.tsv'
         self.gps2_state_fpabs = self.state_dir / 'gps2_state.tsv'
+        if gps1 is None:
+            gps1 = wgs84tup(latitude_rad=0., longitude_rad=0., elevation_ft=0.)
         self.gps1 = gps1
+        if gps2 is None:
+            gps2 = wgs84tup(latitude_rad=0., longitude_rad=0., elevation_ft=0.)
         self.gps2 = gps2
 
 
