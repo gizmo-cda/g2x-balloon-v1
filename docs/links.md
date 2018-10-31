@@ -43,3 +43,15 @@ It is possible to convert between WGS84 and ECEF. More details can be found belo
 # Ellipsoid Info
 
 - https://ipfs.io/ipfs/QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco/wiki/Ellipsoid.html
+
+# Google Earth
+
+- [Network Link Guide](http://www.gelib.com/google-earth-network-links.htm)
+- [USGS Earthquake Monitoring](http://earthquake.usgs.gov/eqcenter/recenteqsww/catalogs/eqs7day-age.kmz)
+> This network link automatically shows you the most current seismic activity –
+and summarizes activity during the last week with greater than magnitude
+1.0. Read more about it
+[here](https://www.gearthblog.com/blog/archives/2006/11/post_2.html). Notice
+that the network link includes placemarks, lines, and a legend. Anything
+you can put in a KML file can be in a network link. This network link
+automatically updates (or refreshes) every 5 minutes.

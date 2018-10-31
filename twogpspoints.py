@@ -104,6 +104,25 @@ def haversine(lat1_rad, lon1_rad, lat2_rad, lon2_rad):
     longitude_rad_per_ft = _math.radians(1. / 244_833.2546460106)
 
 
+def kml_byte_str(gps1, gps2, ):
+    """
+    writes the KML Google Earth displays
+    """
+    #gps1 = latitude_rad, longitude_rad, elevation_ft
+
+    kml = (
+       '<?xml version="1.0" encoding="UTF-8"?>\n'
+       '<kml xmlns="http://www.opengis.net/kml/2.2">\n'
+       '<Placemark>\n'
+       '<name>Random Placemark</name>\n'
+       '<Point>\n'
+       '<coordinates>%d,%d</coordinates>\n'
+       '</Point>\n'
+       '</Placemark>\n'
+       '</kml>'
+       ) % (gps1.longitude_rad, gps1.latitude_rad)
+    return kml
+
 class TwoGps(object):
     def __init__(self, state_dir=None, gps1=None, gps2=None):
         if state_dir is not None:
@@ -144,6 +163,9 @@ class TwoGps(object):
     def gps2(self, value):
         write_move_gps_state(fp_abs=self.gps2_state_fpabs, gps=value)
 
+    def gen_kml_str(self):
+        byte_str = kml_byte_str(gps1=self.gps1, gps2=self.gps2, )
+        return byte_str
 
 if __name__ == '__main__':
     # center parking line north cement meridian end barrier
