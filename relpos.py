@@ -18,7 +18,7 @@ import typing as _typing
 import math as _math
 import numpy as _np
 import math as math
-import numpy as np
+#import numpy as np
 #import json as _json
 
 class latlon(_typing.NamedTuple):
@@ -60,12 +60,12 @@ def prime_vertical_radius_of_curvature(latitude_radians):
 
 
 def wgs84_to_ecef(wgs84: wgs84tup):
-    N = prime_vertical_radius_of_curvature(wgs84.latitude_radians)
+    N = prime_vertical_radius_of_curvature(wgs84.latitude_rad)
 
-    return (
-        (N + wgs84.elevation_m) * _math.cos(wgs84.latitude_radians) * _math.cos(wgs84.longitude_radians),
-        (N + wgs84.elevation_m) * _math.cos(wgs84.latitude_radians) * _math.sin(wgs84.longitude_radians),
-        ((1.0 - ee) * N + wgs84.elevation_m) * _math.sin(wgs84.latitude_radians)
+    return xyz(
+        x=(N + wgs84.elevation_m) * _math.cos(wgs84.latitude_rad) * _math.cos(wgs84.longitude_rad),
+        y=(N + wgs84.elevation_m) * _math.cos(wgs84.latitude_rad) * _math.sin(wgs84.longitude_rad),
+        z=((1.0 - ee) * N + wgs84.elevation_m) * _math.sin(wgs84.latitude_rad),
     )
 #-------ripped from gps\wgs84-to-ecef.py--------
 
@@ -146,34 +146,34 @@ def eulerAnglesToRotationMatrix(theta):
     https://www.learnopencv.com/rotation-matrix-to-euler-angles/
     """
      
-    R_x = np.array([[1,         0,                  0                   ],
-                    [0,         math.cos(theta[0]), -math.sin(theta[0]) ],
-                    [0,         math.sin(theta[0]), math.cos(theta[0])  ]
-                    ])
+    R_x = _np.array([[1,         0,                  0                   ],
+                     [0,         math.cos(theta[0]), -math.sin(theta[0]) ],
+                     [0,         math.sin(theta[0]), math.cos(theta[0])  ]
+                     ])
          
          
                      
-    R_y = np.array([[math.cos(theta[1]),    0,      math.sin(theta[1])  ],
-                    [0,                     1,      0                   ],
-                    [-math.sin(theta[1]),   0,      math.cos(theta[1])  ]
-                    ])
+    R_y = _np.array([[math.cos(theta[1]),    0,      math.sin(theta[1])  ],
+                     [0,                     1,      0                   ],
+                     [-math.sin(theta[1]),   0,      math.cos(theta[1])  ]
+                     ])
                  
-    R_z = np.array([[math.cos(theta[2]),    -math.sin(theta[2]),    0],
-                    [math.sin(theta[2]),    math.cos(theta[2]),     0],
-                    [0,                     0,                      1]
-                    ])
+    R_z = _np.array([[math.cos(theta[2]),    -math.sin(theta[2]),    0],
+                     [math.sin(theta[2]),    math.cos(theta[2]),     0],
+                     [0,                     0,                      1]
+                     ])
                      
                      
-    R = np.dot(R_z, np.dot( R_y, R_x ))
+    R = _np.dot(R_z, _np.dot( R_y, R_x ))
  
     return R  # Rotation Matrix
 
 # Checks if a matrix is a valid rotation matrix.
 def isRotationMatrix(R) :
-    Rt = np.transpose(R)
-    shouldBeIdentity = np.dot(Rt, R)
-    I = np.identity(3, dtype = R.dtype)
-    n = np.linalg.norm(I - shouldBeIdentity)
+    Rt = _np.transpose(R)
+    shouldBeIdentity = _np.dot(Rt, R)
+    I = _np.identity(3, dtype = R.dtype)
+    n = _np.linalg.norm(I - shouldBeIdentity)
     return n < 1e-6
  
  
@@ -197,22 +197,33 @@ def rotationMatrixToEulerAngles(R):
         y = math.atan2(-R[2,0], sy)
         z = 0
  
-    return np.array([x, y, z])
+    return _np.array([x, y, z])
 
-def gps_loc_plane_unit_vectors(gps_location):
+def gps_loc_plane_unit_vectors(gps_location: wgs84tup):
     rotation_matrix = eulerAnglesToRotationMatrix(theta=[
         0,
         gps_location.latitude_rad,  # latitude rotation about y
         gps_location.longitude_rad,  # longitude rotation about z
     ])
     # unit_look_vectors
-    plane_x_unit_abs = rotation_matrix @ np.array(xyz(x=1, y=0, z=0))
-    plane_y_unit_abs = rotation_matrix @ np.array(xyz(x=0, y=1, z=0))
-    plane_z_unit_abs = rotation_matrix @ np.array(xyz(x=0, y=0, z=1))
+    plane_x_unit_abs = rotation_matrix @ _np.array(xyz(x=1, y=0, z=0))
+    plane_y_unit_abs = rotation_matrix @ _np.array(xyz(x=0, y=1, z=0))
+    plane_z_unit_abs = rotation_matrix @ _np.array(xyz(x=0, y=0, z=1))
     return xyz(x=plane_x_unit_abs, y=plane_y_unit_abs, z=plane_z_unit_abs)
 
-def gps_loc_plane_unit_vectors(gps1: wgs84tup, gps2: wgs84tup):
-    delta_xyz(curr_xyz, targ_xyz)
+def gps_rel_positions(gps1: wgs84tup, gps2: wgs84tup):
+    xyz_abs_1 = wgs84_to_ecef(wgs84=gps1)
+    xyz_abs_2 = wgs84_to_ecef(wgs84=gps2)
+    xyz_deltas_abs = delta_xyz(curr_xyz=xyz_abs_1, targ_xyz=xyz_abs_2)
+    gps1_plane = gps_loc_plane_unit_vectors(gps_location=gps1)
+    plane_x_val = gps1_plane.x @ xyz_deltas_abs
+    plane_y_val = gps1_plane.y @ xyz_deltas_abs
+    plane_z_val = gps1_plane.z @ xyz_deltas_abs
+    pxyz = xyz(x=plane_x_val, y=plane_y_val, z=plane_z_val)
+    angle_from_x_deg = _math.degrees(_math.atan2(pxyz.y, pxyz.x))  # y,x
+    angle_from_y_deg = _math.degrees(_math.atan2(pxyz.z, pxyz.x))  # y,x
+    radius = _math.sqrt(dot_product(pxyz, pxyz))
+    return angle_from_x_deg, angle_from_y_deg, radius
 
 if __name__ == '__main__':
     # center parking line north cement meridian end barrier
@@ -239,5 +250,5 @@ if __name__ == '__main__':
     rotationMatrixToEulerAngles(R=rot_matrix)
     xyz(x=1,y=1,z=1)
     
-    new_units = gps_loc_plane_unit_vectors(gps_location=gps1)
-    
+    new_unit_vectors = gps_loc_plane_unit_vectors(gps_location=gps1)
+    test = gps_rel_positions(gps1=gps1, gps2=gps2)
