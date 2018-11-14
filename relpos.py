@@ -32,11 +32,10 @@ ee = 1.0 - semi_minor_axis**2 / semi_major_axis**2
 
 def prime_vertical_radius_of_curvature(latitude_radians):
     sin_lat = _math.sin(latitude_radians)
-
     return semi_major_axis / _math.sqrt(1.0 - ee * sin_lat**2)
 
 
-def wgs84_to_ecef(wgs84):
+def wgs84_to_ecef(wgs84: wgs84tup):
     (latitude_radians, longitude_radians, height_meters) = wgs84
     N = prime_vertical_radius_of_curvature(latitude_radians)
 
@@ -58,7 +57,7 @@ class latlon(_typing.NamedTuple):
 class wgs84tup(_typing.NamedTuple):
     latitude_rad: float
     longitude_rad: float
-    elevation_ft: float
+    elevation_m: float
 
 class xyz(_typing.NamedTuple):
     x: float
@@ -219,21 +218,21 @@ if __name__ == '__main__':
     # center parking line north cement meridian end barrier
     lat1 = latlon(deg=47, minute=40, second=32.63, hemisphere='N')
     lon1 = latlon(deg=116, minute=47, second=43.07, hemisphere='W')
-    elevation_ft1 = 2139  # ft
+    elevation_m1 = 2139 * 0.3048  # ft * 0.3048 -> m
     gps1 = wgs84tup(
         latitude_rad=conv_deghms_2_radians(**lat1._asdict()),
         longitude_rad=conv_deghms_2_radians(**lon1._asdict()),
-        elevation_ft=elevation_ft1,
+        elevation_m=elevation_m1,
     )
 
     # center parking line south cement meridian end barrier farthest east point
     lat2 = latlon(deg=47, minute=40, second=30.93, hemisphere='N')
     lon2 = latlon(deg=116, minute=47, second=42.54, hemisphere='W')
-    elevation_ft2 = 2140  # ft
+    elevation_m2 = 2140 * 0.3048  # ft * 0.3048 -> m
     gps2 = wgs84tup(
         latitude_rad=conv_deghms_2_radians(**lat2._asdict()),
         longitude_rad=conv_deghms_2_radians(**lon2._asdict()),
-        elevation_ft=elevation_ft2,
+        elevation_m=elevation_m2,
     )
 
     rot_matrix = eulerAnglesToRotationMatrix(theta=[_math.pi/2,_math.pi/2,0])
