@@ -60,13 +60,12 @@ def prime_vertical_radius_of_curvature(latitude_radians):
 
 
 def wgs84_to_ecef(wgs84: wgs84tup):
-    (latitude_radians, longitude_radians, height_meters) = wgs84
-    N = prime_vertical_radius_of_curvature(latitude_radians)
+    N = prime_vertical_radius_of_curvature(wgs84.latitude_radians)
 
     return (
-        (N + height_meters) * _math.cos(latitude_radians) * _math.cos(longitude_radians),
-        (N + height_meters) * _math.cos(latitude_radians) * _math.sin(longitude_radians),
-        ((1.0 - ee) * N + height_meters) * _math.sin(latitude_radians)
+        (N + wgs84.elevation_m) * _math.cos(wgs84.latitude_radians) * _math.cos(wgs84.longitude_radians),
+        (N + wgs84.elevation_m) * _math.cos(wgs84.latitude_radians) * _math.sin(wgs84.longitude_radians),
+        ((1.0 - ee) * N + wgs84.elevation_m) * _math.sin(wgs84.latitude_radians)
     )
 #-------ripped from gps\wgs84-to-ecef.py--------
 
