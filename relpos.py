@@ -12,14 +12,10 @@ general object to handle relative positioning
 The simplest way to transform coordinates in Python is pyproj, i.e. the
 Python interface to PROJ.4 library. https://gis.stackexchange.com/questions/78838/converting-projected-coordinates-to-lat-lon-using-python/78944#78944
 """
-#import pathlib as _pathlib
-#import inspect as _inspect
 import typing as _typing
 import math as _math
 import numpy as _np
 import math as math
-#import numpy as np
-#import json as _json
 
 class latlon(_typing.NamedTuple):
     deg: float
