@@ -20,6 +20,30 @@ import numpy as _np
 import math as math
 import numpy as np
 #import json as _json
+
+class latlon(_typing.NamedTuple):
+    deg: float
+    minute: float
+    second: float
+    hemisphere: _typing.AnyStr
+
+# http://spatialreference.org/ref/epsg/4326/
+# WGS84 Bounds: -180.0000, -90.0000, 180.0000, 90.0000
+class wgs84tup(_typing.NamedTuple):
+    latitude_rad: float
+    longitude_rad: float
+    elevation_m: float
+
+class xyz(_typing.NamedTuple):
+    x: float
+    y: float
+    z: float
+
+class out_look_at(_typing.NamedTuple):
+    angle_rad_between_unit_vectors: float
+    unit_vector_axis_of_rotation: xyz
+    unit_vector_to_target: xyz
+
 #-------ripped from gps\wgs84-to-ecef.py--------
 
 # major/minor axes in meters
@@ -45,29 +69,6 @@ def wgs84_to_ecef(wgs84: wgs84tup):
         ((1.0 - ee) * N + height_meters) * _math.sin(latitude_radians)
     )
 #-------ripped from gps\wgs84-to-ecef.py--------
-
-class latlon(_typing.NamedTuple):
-    deg: float
-    minute: float
-    second: float
-    hemisphere: _typing.AnyStr
-
-# http://spatialreference.org/ref/epsg/4326/
-# WGS84 Bounds: -180.0000, -90.0000, 180.0000, 90.0000
-class wgs84tup(_typing.NamedTuple):
-    latitude_rad: float
-    longitude_rad: float
-    elevation_m: float
-
-class xyz(_typing.NamedTuple):
-    x: float
-    y: float
-    z: float
-
-class out_look_at(_typing.NamedTuple):
-    angle_rad_between_unit_vectors: float
-    unit_vector_axis_of_rotation: xyz
-    unit_vector_to_target: xyz
 
 def delta_xyz(curr_xyz, targ_xyz):
     delta_x = float(targ_xyz.x - curr_xyz.x)
