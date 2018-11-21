@@ -19,40 +19,6 @@ import typing as _typing
 import math as _math
 import json as _json
 
-class latlon(_typing.NamedTuple):
-    deg: float
-    minute: float
-    second: float
-    hemisphere: _typing.AnyStr
-
-# http://spatialreference.org/ref/epsg/4326/
-# WGS84 Bounds: -180.0000, -90.0000, 180.0000, 90.0000
-class wgs84tup(_typing.NamedTuple):
-    latitude_rad: float
-    longitude_rad: float
-    elevation_m: float
-
-def conv_deghms_2_radians(deg, minute, second, hemisphere):
-    r"""
-    gps annotations:
-        ° : degree
-        ' : minute
-        " : second
-    1 degree is equal to 1 hour, that is equal to 60 minutes or 3600 seconds.
-    To calculate decimal degrees, we use the DMS to decimal degree formula below:
-    Decimal Degrees = degrees + (minutes/60) + (seconds/3600)
-    source: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees
-
-    hemisphere is relative to the prime meridian
-    https://msdn.microsoft.com/en-us/library/aa578799.aspx
-    """
-    deg_comb = deg + (minute / 60.) + (second / 3600.)
-    rad_comb = _math.radians(deg_comb)
-    if hemisphere.lower() in ('S', 'W'):
-        rad_comb *= -1
-    return rad_comb
-
-
 def write_move_gps_state(fp_abs, gps):
     """
     Moves are atomic, writing a file is not.  Want to write to temp file and
