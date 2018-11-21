@@ -30,7 +30,7 @@ class latlon(_typing.NamedTuple):
 class wgs84tup(_typing.NamedTuple):
     latitude_rad: float
     longitude_rad: float
-    elevation_ft: float
+    elevation_m: float
 
 def conv_deghms_2_radians(deg, minute, second, hemisphere):
     r"""
@@ -110,7 +110,7 @@ def kml_byte_str(gps1, gps2, ):
     """
     writes the KML Google Earth displays
     """
-    #gps1 = latitude_rad, longitude_rad, elevation_ft
+    #gps1 = latitude_rad, longitude_rad, elevation_m
 
     kml = (
        '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -142,10 +142,10 @@ class TwoGps(object):
         self.gps1_state_fpabs = self.state_dir / 'gps1_state.tsv'
         self.gps2_state_fpabs = self.state_dir / 'gps2_state.tsv'
         if gps1 is None:
-            gps1 = wgs84tup(latitude_rad=0., longitude_rad=0., elevation_ft=0.)
+            gps1 = wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
         self.gps1 = gps1
         if gps2 is None:
-            gps2 = wgs84tup(latitude_rad=0., longitude_rad=0., elevation_ft=0.)
+            gps2 = wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
         self.gps2 = gps2
 
 
@@ -173,21 +173,21 @@ if __name__ == '__main__':
     # center parking line north cement meridian end barrier
     lat1 = latlon(deg=47, minute=40, second=32.63, hemisphere='N')
     lon1 = latlon(deg=116, minute=47, second=43.07, hemisphere='W')
-    elevation_ft1 = 2139  # ft
+    elevation_m1 = 0.3048 * 2139  # ft/m * ft
     _gps1 = wgs84tup(
         latitude_rad=conv_deghms_2_radians(**lat1._asdict()),
         longitude_rad=conv_deghms_2_radians(**lon1._asdict()),
-        elevation_ft=elevation_ft1,
+        elevation_m=elevation_m1,
     )
 
     # center parking line south cement meridian end barrier farthest east point
     lat2 = latlon(deg=47, minute=40, second=30.93, hemisphere='N')
     lon2 = latlon(deg=116, minute=47, second=42.54, hemisphere='W')
-    elevation_ft2 = 2140  # ft
+    elevation_m2 = 0.3048 * 2140  # ft/m * ft
     _gps2 = wgs84tup(
         latitude_rad=conv_deghms_2_radians(**lat2._asdict()),
         longitude_rad=conv_deghms_2_radians(**lon2._asdict()),
-        elevation_ft=elevation_ft2,
+        elevation_m=elevation_m2,
     )
 
     tgps = TwoGps(gps1=_gps1, gps2=_gps2)
