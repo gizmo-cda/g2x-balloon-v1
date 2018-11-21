@@ -103,6 +103,10 @@ def cross_product(A, B):
     return xyz(x=x, y=y, z=z)
 
 def look_at(current_pos, target_pos, current_view_unit=xyz(x=1, y=0, z=0)):
+    """
+    If currently are looking in a direction, but want to look at another xyz
+    position, this function determines the single angle in radians that 
+    """
     ntarget = unit_vector_to_target(
         current_pos=current_pos, target_pos=target_pos, )
     dot_mag = dot_product(vect1=ntarget, vect2=current_view_unit)
