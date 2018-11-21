@@ -6,3 +6,7 @@
 
 # PyCharm
 .idea
+
+# Python compiled items
+.pytest_cache/
+__pycache__
