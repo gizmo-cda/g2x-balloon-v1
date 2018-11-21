@@ -46,11 +46,11 @@ def conv_deghms_2_radians(deg, minute, second, hemisphere):
     hemisphere is relative to the prime meridian
     https://msdn.microsoft.com/en-us/library/aa578799.aspx
     """
-    deg_all = deg + (minute / 60.) + (second / 3600.)
-    rad_all = _math.radians(deg_all)
+    deg_comb = deg + (minute / 60.) + (second / 3600.)
+    rad_comb = _math.radians(deg_comb)
     if hemisphere.lower() in ('S', 'W'):
-        rad_all *= -1
-    return rad_all
+        rad_comb *= -1
+    return rad_comb
 
 
 def write_move_gps_state(fp_abs, gps):
