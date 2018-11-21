@@ -6,6 +6,21 @@ Additional command line commands to get and post
 curl -I http://localhost:8000
 curl 'http://localhost:8000?foo=bar&bin=go'
 curl -d "foo=bar&bin=go" http://localhost:8000
+
+or using only python
+
+    import json; import requests
+    lat = '10 '; lat_compass = 'W'
+    lng = '10 '; lng_compass = 'W'
+    alt = '10 '
+    url="http://10.10.107.188:8000/"
+    header={'Content-Type': 'application/json' }
+    data={
+        'latitude': lat + lat_compass,
+        'longiude': lng + lng_compass,
+        'altitude': alt + 'm'
+    }
+    req = requests.post(url, headers=header, data=json.dumps(data))
 """
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import socketserver
@@ -39,10 +54,11 @@ class StoreHandler(BaseHTTPRequestHandler):
         data = self.rfile.read(int(length))
         json_str = data.decode()
         self.send_response(200)
+        self.end_headers()
 
-        state_text = fp_abs.read_text()
-        json_dict = _json.loads(json_str)
-        gps_pt = wgs84tup(**json_dict)
+#        state_text = fp_abs.read_text()
+#        json_dict = _json.loads(json_str)
+#        gps_pt = wgs84tup(**json_dict)
 
 
 #class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
