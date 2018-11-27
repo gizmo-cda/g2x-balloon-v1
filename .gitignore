@@ -10,3 +10,6 @@
 # Python compiled items
 .pytest_cache/
 __pycache__
+.vscode
+state_dir/
+gps_example-path.kml
