@@ -41,6 +41,7 @@ or using only python
     }
     req = requests.post(url, headers=header, data=json.dumps(data))
 """
+import pytest
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import socketserver
 from io import BytesIO
@@ -74,12 +75,29 @@ def read_gps_state(fp_abs):
     gps_pt = _relpos.wgs84tup(**_json.loads(state_text))
     return gps_pt
 
-def kml_byte_str(gps1, gps2, ):
+def kml_byte_str_random(*args, **kwargs):
     """
     writes the KML Google Earth displays
     """
     #gps1 = latitude_rad, longitude_rad, elevation_m
+    import random
 
+    latitude = random.randrange(-90, 90)
+    longitude = random.randrange(-180, 180)
+    kml = (
+       '<?xml version="1.0" encoding="UTF-8"?>\n'
+       '<kml xmlns="http://www.opengis.net/kml/2.2">\n'
+       '<Placemark>\n'
+       '<name>Random Placemark</name>\n'
+       '<Point>\n'
+       '<coordinates>%d,%d</coordinates>\n'
+       '</Point>\n'
+       '</Placemark>\n'
+       '</kml>'
+       ) %(longitude, latitude)
+    return kml
+
+def kml_byte_str(gps1, gps2, ):
     kml = (
        '<?xml version="1.0" encoding="UTF-8"?>\n'
        '<kml xmlns="http://www.opengis.net/kml/2.2">\n'
@@ -190,7 +208,7 @@ if True and __name__ == '__main__':
     # center parking line north cement meridian end barrier
     lat1 = _relpos.latlon(deg=47, minute=40, second=32.63, hemisphere='N')
     lon1 = _relpos.latlon(deg=116, minute=47, second=43.07, hemisphere='W')
-    elevation_m1 = 0.3048 * 2139  # ft/m * ft
+    elevation_m1 = 0.3048 * 2139  # m/ft * ft
     _gps1 = _relpos.wgs84tup(
         latitude_rad=_relpos.conv_deghms_2_radians(**lat1._asdict()),
         longitude_rad=_relpos.conv_deghms_2_radians(**lon1._asdict()),
@@ -200,7 +218,7 @@ if True and __name__ == '__main__':
     # center parking line south cement meridian end barrier farthest east point
     lat2 = _relpos.latlon(deg=47, minute=40, second=30.93, hemisphere='N')
     lon2 = _relpos.latlon(deg=116, minute=47, second=42.54, hemisphere='W')
-    elevation_m2 = 0.3048 * 2140  # ft/m * ft
+    elevation_m2 = 0.3048 * 2140  # m/ft * ft
     _gps2 = _relpos.wgs84tup(
         latitude_rad=_relpos.conv_deghms_2_radians(**lat2._asdict()),
         longitude_rad=_relpos.conv_deghms_2_radians(**lon2._asdict()),
@@ -213,12 +231,46 @@ if True and __name__ == '__main__':
     lat2_rad = _gps2.latitude_rad
     lon2_rad = _gps2.longitude_rad
 
+if True and __name__ == '__main__':  # gizmo-cda building polygon
+    north_east_lat = _relpos.latlon(deg=47, minute=40, second=32.56, hemisphere='N')
+    north_east_lon = _relpos.latlon(deg=116, minute=47, second=42.06, hemisphere='W')
+    north_west_lat = _relpos.latlon(deg=47, minute=40, second=31.96, hemisphere='N')
+    north_west_lon = _relpos.latlon(deg=116, minute=47, second=45.67, hemisphere='W')
+    south_west_lat = _relpos.latlon(deg=47, minute=40, second=30.27, hemisphere='N')
+    south_west_lon = _relpos.latlon(deg=116, minute=47, second=45.70, hemisphere='W')
+    south_east_lat = _relpos.latlon(deg=47, minute=40, second=30.24, hemisphere='N')
+    south_east_lon = _relpos.latlon(deg=116, minute=47, second=44.21, hemisphere='W')
+    altitude_above_ground_m = 0.3048 * 100  # m/ft * ft
+#    pytest.set_trace()
+    ne_pt = _relpos.wgs84tup(
+        latitude_rad=_relpos.conv_deghms_2_radians(**north_east_lat._asdict()),
+        longitude_rad=_relpos.conv_deghms_2_radians(**north_east_lon._asdict()),
+        elevation_m=altitude_above_ground_m,
+    )
+    nw_pt = _relpos.wgs84tup(
+        latitude_rad=_relpos.conv_deghms_2_radians(**north_west_lat._asdict()),
+        longitude_rad=_relpos.conv_deghms_2_radians(**north_west_lon._asdict()),
+        elevation_m=altitude_above_ground_m,
+    )
+    sw_pt = _relpos.wgs84tup(
+        latitude_rad=_relpos.conv_deghms_2_radians(**south_west_lat._asdict()),
+        longitude_rad=_relpos.conv_deghms_2_radians(**south_west_lon._asdict()),
+        elevation_m=altitude_above_ground_m,
+    )
+    se_pt = _relpos.wgs84tup(
+        latitude_rad=_relpos.conv_deghms_2_radians(**south_east_lat._asdict()),
+        longitude_rad=_relpos.conv_deghms_2_radians(**south_east_lon._asdict()),
+        elevation_m=altitude_above_ground_m,
+    )
+    coord_text_array = "\n".join([gps.google_earth_pts for gps in (ne_pt, nw_pt, sw_pt, se_pt)])
+    print(coord_text_array)
+
 
 PORT = 8000
 if False:
     httpd = HTTPServer(('localhost', PORT), StoreHandler)
     httpd.serve_forever()
-elif True and __name__ == '__main__':
+elif not True and __name__ == '__main__':
     with socketserver.TCPServer(
                 # server_address=("127.0.0.1", PORT),
                 server_address=("", PORT),

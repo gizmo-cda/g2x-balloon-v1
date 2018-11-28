@@ -26,9 +26,17 @@ class latlon(_typing.NamedTuple):
 # http://spatialreference.org/ref/epsg/4326/
 # WGS84 Bounds: -180.0000, -90.0000, 180.0000, 90.0000
 class wgs84tup(_typing.NamedTuple):
-    latitude_rad: float
     longitude_rad: float
+    latitude_rad: float
     elevation_m: float
+
+    @property
+    def google_earth_pts(self):
+        elev_ft = self.elevation_m / 0.3048  # m / (m / ft)
+        lat_deg = _math.degrees(self.latitude_rad)
+        long_deg = _math.degrees(self.longitude_rad)
+        text_str = "%f,%f,%f" % (long_deg, lat_deg, elev_ft)
+        return text_str
 
 class xyz(_typing.NamedTuple):
     x: float
@@ -105,7 +113,7 @@ def cross_product(A, B):
 def look_at(current_pos, target_pos, current_view_unit=xyz(x=1, y=0, z=0)):
     """
     If currently are looking in a direction, but want to look at another xyz
-    position, this function determines the single angle in radians that 
+    position, this function determines the single angle in radians that
     """
     ntarget = unit_vector_to_target(
         current_pos=current_pos, target_pos=target_pos, )
@@ -145,27 +153,27 @@ def eulerAnglesToRotationMatrix(theta):
     r"""
     https://www.learnopencv.com/rotation-matrix-to-euler-angles/
     """
-     
+
     R_x = _np.array([[1,         0,                  0                   ],
                      [0,         math.cos(theta[0]), -math.sin(theta[0]) ],
                      [0,         math.sin(theta[0]), math.cos(theta[0])  ]
                      ])
-         
-         
-                     
+
+
+
     R_y = _np.array([[math.cos(theta[1]),    0,      math.sin(theta[1])  ],
                      [0,                     1,      0                   ],
                      [-math.sin(theta[1]),   0,      math.cos(theta[1])  ]
                      ])
-                 
+
     R_z = _np.array([[math.cos(theta[2]),    -math.sin(theta[2]),    0],
                      [math.sin(theta[2]),    math.cos(theta[2]),     0],
                      [0,                     0,                      1]
                      ])
-                     
-                     
+
+
     R = _np.dot(R_z, _np.dot( R_y, R_x ))
- 
+
     return R  # Rotation Matrix
 
 # Checks if a matrix is a valid rotation matrix.
@@ -175,19 +183,19 @@ def isRotationMatrix(R) :
     I = _np.identity(3, dtype = R.dtype)
     n = _np.linalg.norm(I - shouldBeIdentity)
     return n < 1e-6
- 
- 
+
+
 # Calculates rotation matrix to euler angles
 # The result is the same as MATLAB except the order
 # of the euler angles ( x and z are swapped ).
 def rotationMatrixToEulerAngles(R):
- 
+
     assert(isRotationMatrix(R))
-     
+
     sy = math.sqrt(R[0,0] * R[0,0] +  R[1,0] * R[1,0])
-     
+
     singular = sy < 1e-6
- 
+
     if  not singular :
         x = math.atan2(R[2,1] , R[2,2])
         y = math.atan2(-R[2,0], sy)
@@ -196,7 +204,7 @@ def rotationMatrixToEulerAngles(R):
         x = math.atan2(-R[1,2], R[1,1])
         y = math.atan2(-R[2,0], sy)
         z = 0
- 
+
     return _np.array([x, y, z])
 
 def gps_loc_plane_unit_vectors(gps_location: wgs84tup):
@@ -249,6 +257,6 @@ if __name__ == '__main__':
     rot_matrix = eulerAnglesToRotationMatrix(theta=[_math.pi/2,_math.pi/2,0])
     rotationMatrixToEulerAngles(R=rot_matrix)
     xyz(x=1,y=1,z=1)
-    
+
     new_unit_vectors = gps_loc_plane_unit_vectors(gps_location=gps1)
     test = gps_rel_positions(gps1=gps1, gps2=gps2)
