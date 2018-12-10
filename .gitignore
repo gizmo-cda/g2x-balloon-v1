@@ -6,3 +6,7 @@
 
 # PyCharm
 .idea
+
+# Python
+*.pyc
+
