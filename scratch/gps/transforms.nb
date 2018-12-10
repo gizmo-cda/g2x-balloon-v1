@@ -1,0 +1,248 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      7262,        240]
+NotebookOptionsPosition[      6092,        196]
+NotebookOutlinePosition[      6448,        212]
+CellTagsIndexPosition[      6405,        209]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"xAxis", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{"1", ",", " ", "0", ",", " ", "0"}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.750691414605275*^9, 3.750691460731894*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"yAxis", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", " ", "1", ",", " ", "0"}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.7506914247302923`*^9, 3.750691467006465*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"zAxis", " ", "=", " ", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", " ", "0", ",", " ", "1"}], "}"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.750691447178689*^9, 3.7506914697509193`*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cdaGPS", " ", "=", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"47.677680000", ",", 
+       RowBox[{"-", "116.780470000"}], ",", "668"}], "}"}], ",", 
+     "\"\<WGS84Original\>\""}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.750692535751614*^9, 3.750692570255024*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"cda", " ", "=", 
+   RowBox[{
+    RowBox[{"GeoPositionXYZ", "[", "cdaGPS", "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.750692552132213*^9, 3.750692573746708*^9}, {
+  3.750692644652327*^9, 3.750692651314043*^9}, {3.750692766759262*^9, 
+  3.750692770991371*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"balloonGPS", "=", 
+   RowBox[{"GeoPosition", "[", 
+    RowBox[{"{", 
+     RowBox[{"48", ",", " ", 
+      RowBox[{"-", "116.78047"}], ",", " ", "30480"}], "}"}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.750692625222843*^9, 3.750692720863986*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"balloon", "=", 
+   RowBox[{
+    RowBox[{"GeoPositionXYZ", "[", "balloonGPS", "]"}], "[", 
+    RowBox[{"[", "1", "]"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.7506927241589613`*^9, 3.750692735596541*^9}, {
+  3.750692776206642*^9, 3.750692777533511*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"r1", " ", "=", " ", 
+   RowBox[{"RotationTransform", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"-", "47.67768"}], " ", "Degree"}], ",", " ", "yAxis"}], 
+    "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.7506914744660187`*^9, 3.7506915084062853`*^9}, 
+   3.7506916678152018`*^9, {3.750692187666378*^9, 3.750692191700982*^9}, 
+   3.750692369845379*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"r2", " ", "=", " ", 
+   RowBox[{"RotationTransform", "[", 
+    RowBox[{
+     RowBox[{"116.78047", " ", "Degree"}], ",", " ", "zAxis"}], "]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.750691512553977*^9, 3.7506915217903748`*^9}, 
+   3.75069166994601*^9, {3.750692200103422*^9, 3.750692204270665*^9}, 
+   3.750692372028569*^9}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"t", "=", 
+   RowBox[{"TranslationTransform", "[", 
+    RowBox[{"-", "cda"}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.750691624269102*^9, 3.750691677748761*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"r1", "[", 
+  RowBox[{"r2", "[", 
+   RowBox[{"t", "[", "cda", "]"}], "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.750691731033503*^9, 3.750691737483906*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{3.750691738304737*^9, 3.7506922163836117`*^9, 
+  3.750692376830041*^9, 3.750692589509386*^9, 3.75069278112983*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"m", " ", "=", 
+   RowBox[{"r1", ".", "r2", ".", "t"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.750691770529648*^9, 3.7506917944925013`*^9}, {
+  3.750692116993012*^9, 3.750692118111431*^9}, {3.750692222009447*^9, 
+  3.750692234550459*^9}, {3.750692424511072*^9, 3.750692428065619*^9}, {
+  3.7506935112044373`*^9, 3.750693512402673*^9}, {3.750695620616293*^9, 
+  3.75069562355411*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"m", "[", "cda", "]"}]], "Input",
+ CellChangeTimes->{{3.750691780200712*^9, 3.750691781306005*^9}, {
+  3.750692126468997*^9, 3.750692132275216*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.`", ",", "0.`", ",", "0.`"}], "}"}]], "Output",
+ CellChangeTimes->{{3.7506917816168623`*^9, 3.750691797085203*^9}, {
+   3.750692121117374*^9, 3.750692132744656*^9}, {3.7506922164610653`*^9, 
+   3.750692238088426*^9}, 3.75069237688223*^9, 3.750692431526319*^9, 
+   3.750692589554648*^9, 3.750692781179435*^9, 3.75069356432211*^9, 
+   3.750695634589878*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"m", "[", "balloon", "]"}]], "Input",
+ CellChangeTimes->{{3.750692743057143*^9, 3.750692744806161*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "38624.92904829234`"}], ",", "2.3283064365386963`*^-10", ",", 
+   "26220.19870873075`"}], "}"}]], "Output",
+ CellChangeTimes->{3.750692745340469*^9, 3.750692781220155*^9, 
+  3.750693566250986*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["cda"], "Input",
+ CellChangeTimes->{{3.750692810595996*^9, 3.750692813095859*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "1.9386963191247804`*^6"}], ",", 
+   RowBox[{"-", "3.841219235683517`*^6"}], ",", "4.693315239161975`*^6"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.750692813772677*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["balloon"], "Input",
+ CellChangeTimes->{{3.750692814602623*^9, 3.750692815856941*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"-", "1.9357136191393556`*^6"}], ",", 
+   RowBox[{"-", "3.835309488785427`*^6"}], ",", "4.739527384283235`*^6"}], 
+  "}"}]], "Output",
+ CellChangeTimes->{3.7506928163751707`*^9}]
+}, Open  ]]
+},
+WindowSize->{857, 1067},
+WindowMargins->{{11, Automatic}, {Automatic, 24}},
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 216, 5, 28, "Input"],
+Cell[777, 27, 218, 5, 28, "Input"],
+Cell[998, 34, 218, 5, 28, "Input"],
+Cell[1219, 41, 344, 9, 28, "Input"],
+Cell[1566, 52, 340, 8, 28, "Input"],
+Cell[1909, 62, 290, 8, 28, "Input"],
+Cell[2202, 72, 296, 7, 28, "Input"],
+Cell[2501, 81, 392, 10, 28, "Input"],
+Cell[2896, 93, 364, 9, 28, "Input"],
+Cell[3263, 104, 203, 5, 28, "Input"],
+Cell[CellGroupData[{
+Cell[3491, 113, 181, 4, 28, "Input"],
+Cell[3675, 119, 223, 4, 28, "Output"]
+}, Open  ]],
+Cell[3913, 126, 419, 8, 28, "Input"],
+Cell[CellGroupData[{
+Cell[4357, 138, 171, 3, 28, "Input"],
+Cell[4531, 143, 397, 7, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4965, 155, 126, 2, 28, "Input"],
+Cell[5094, 159, 252, 6, 35, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5383, 170, 95, 1, 28, "Input"],
+Cell[5481, 173, 227, 6, 35, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5745, 184, 99, 1, 28, "Input"],
+Cell[5847, 187, 229, 6, 35, "Output"]
+}, Open  ]]
+}
+]
+*)
+

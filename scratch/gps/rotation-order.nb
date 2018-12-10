@@ -1,0 +1,193 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.4' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      5604,        185]
+NotebookOptionsPosition[      4987,        158]
+NotebookOutlinePosition[      5343,        174]
+CellTagsIndexPosition[      5300,        171]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ry", "=", 
+   RowBox[{"RotationTransform", "[", 
+    RowBox[{"la", ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "1", ",", "0"}], "}"}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.7506941536378317`*^9, 3.7506941845020103`*^9}, {
+  3.750694291126547*^9, 3.7506942925018673`*^9}, {3.7506944094486723`*^9, 
+  3.7506944420434313`*^9}, {3.7506945015185823`*^9, 3.750694501750132*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"rz", "=", 
+   RowBox[{"RotationTransform", "[", 
+    RowBox[{"lo", ",", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", "0", ",", "1"}], "}"}]}], "]"}]}], ";"}]], "Input",
+ CellChangeTimes->{{3.7506941867828007`*^9, 3.750694200162471*^9}, {
+  3.7506944178830976`*^9, 3.750694439310854*^9}, {3.750694503959375*^9, 
+  3.750694504131338*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ry", ".", "rz"}]], "Input",
+ CellChangeTimes->{{3.750694205978408*^9, 3.750694207738809*^9}}],
+
+Cell[BoxData[
+ RowBox[{"TransformationFunction", "[", 
+  RowBox[{"(", 
+   TagBox[GridBox[{
+      {
+       RowBox[{
+        RowBox[{"Cos", "[", "la", "]"}], " ", 
+        RowBox[{"Cos", "[", "lo", "]"}]}], 
+       RowBox[{
+        RowBox[{"-", 
+         RowBox[{"Cos", "[", "la", "]"}]}], " ", 
+        RowBox[{"Sin", "[", "lo", "]"}]}], 
+       RowBox[{"Sin", "[", "la", "]"}], "0"},
+      {
+       RowBox[{"Sin", "[", "lo", "]"}], 
+       RowBox[{"Cos", "[", "lo", "]"}], "0", "0"},
+      {
+       RowBox[{
+        RowBox[{"-", 
+         RowBox[{"Cos", "[", "lo", "]"}]}], " ", 
+        RowBox[{"Sin", "[", "la", "]"}]}], 
+       RowBox[{
+        RowBox[{"Sin", "[", "la", "]"}], " ", 
+        RowBox[{"Sin", "[", "lo", "]"}]}], 
+       RowBox[{"Cos", "[", "la", "]"}], "0"},
+      {"0", "0", "0", "1"}
+     },
+     AutoDelete->False,
+     GridBoxDividers->{
+      "Columns" -> {{False}}, "ColumnsIndexed" -> {-2 -> True}, 
+       "Rows" -> {{False}}, "RowsIndexed" -> {-2 -> True}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    #& ], ")"}], "]"}]], "Output",
+ CellChangeTimes->{
+  3.75069420846802*^9, {3.750694286649946*^9, 3.750694297931678*^9}, 
+   3.750694445120297*^9, 3.750694508607291*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"rz", ".", "ry"}]], "Input",
+ CellChangeTimes->{{3.750694210713092*^9, 3.750694213237278*^9}}],
+
+Cell[BoxData[
+ RowBox[{"TransformationFunction", "[", 
+  RowBox[{"(", 
+   TagBox[GridBox[{
+      {
+       RowBox[{
+        RowBox[{"Cos", "[", "la", "]"}], " ", 
+        RowBox[{"Cos", "[", "lo", "]"}]}], 
+       RowBox[{"-", 
+        RowBox[{"Sin", "[", "lo", "]"}]}], 
+       RowBox[{
+        RowBox[{"Cos", "[", "lo", "]"}], " ", 
+        RowBox[{"Sin", "[", "la", "]"}]}], "0"},
+      {
+       RowBox[{
+        RowBox[{"Cos", "[", "la", "]"}], " ", 
+        RowBox[{"Sin", "[", "lo", "]"}]}], 
+       RowBox[{"Cos", "[", "lo", "]"}], 
+       RowBox[{
+        RowBox[{"Sin", "[", "la", "]"}], " ", 
+        RowBox[{"Sin", "[", "lo", "]"}]}], "0"},
+      {
+       RowBox[{"-", 
+        RowBox[{"Sin", "[", "la", "]"}]}], "0", 
+       RowBox[{"Cos", "[", "la", "]"}], "0"},
+      {"0", "0", "0", "1"}
+     },
+     AutoDelete->False,
+     GridBoxDividers->{
+      "Columns" -> {{False}}, "ColumnsIndexed" -> {-2 -> True}, 
+       "Rows" -> {{False}}, "RowsIndexed" -> {-2 -> True}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    #& ], ")"}], "]"}]], "Output",
+ CellChangeTimes->{
+  3.7506942142164373`*^9, {3.750694286698803*^9, 3.7506942979654417`*^9}, 
+   3.750694445165998*^9, 3.750694508666048*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData["ry"], "Input",
+ CellChangeTimes->{{3.750708170202731*^9, 3.7507081702826757`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"TransformationFunction", "[", 
+  RowBox[{"(", 
+   TagBox[GridBox[{
+      {
+       RowBox[{"Cos", "[", "la", "]"}], "0", 
+       RowBox[{"Sin", "[", "la", "]"}], "0"},
+      {"0", "1", "0", "0"},
+      {
+       RowBox[{"-", 
+        RowBox[{"Sin", "[", "la", "]"}]}], "0", 
+       RowBox[{"Cos", "[", "la", "]"}], "0"},
+      {"0", "0", "0", "1"}
+     },
+     AutoDelete->False,
+     GridBoxDividers->{
+      "Columns" -> {{False}}, "ColumnsIndexed" -> {-2 -> True}, 
+       "Rows" -> {{False}}, "RowsIndexed" -> {-2 -> True}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    #& ], ")"}], "]"}]], "Output",
+ CellChangeTimes->{3.750708170945086*^9}]
+}, Open  ]]
+},
+WindowSize->{808, 911},
+WindowMargins->{{105, Automatic}, {22, Automatic}},
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (April 11, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 424, 9, 28, "Input"],
+Cell[985, 31, 370, 9, 28, "Input"],
+Cell[CellGroupData[{
+Cell[1380, 44, 117, 2, 28, "Input"],
+Cell[1500, 48, 1235, 35, 81, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2772, 88, 117, 2, 28, "Input"],
+Cell[2892, 92, 1238, 35, 81, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4167, 132, 96, 1, 28, "Input"],
+Cell[4266, 135, 705, 20, 81, "Output"]
+}, Open  ]]
+}
+]
+*)
+
