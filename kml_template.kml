@@ -17,14 +17,50 @@
         <altitudeMode>relativeToGround</altitudeMode>
         <outerBoundaryIs>
           <LinearRing>
-            <coordinates> -116.795017,47.675017,100.000000
-              -116.796019,47.675544,100.000000
-              -116.796028,47.675075,100.000000
-              -116.795614,47.675067,100.000000
+            <coordinates> -116.795017,47.675017,10.000000
+              -116.796019,47.675544,10.000000
+              -116.796028,47.675075,10.000000
+              -116.795614,47.675067,10.000000
+			  -116.795017,47.675017,10.000000
             </coordinates>
           </LinearRing>
         </outerBoundaryIs>
       </Polygon>
     </Placemark>
+	<Placemark>
+		<name>Google office</name>
+		<description>This is the location of Google</description>
+		<Point>
+			<coordinates>-116.795037,47.675097,100.000000</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>Google office</name>
+		<description>This is the location of Google</description>
+		<Point>
+			<coordinates>-116.795027,47.675027,100.000000</coordinates>
+		</Point>
+	</Placemark>
   </Document>
 </kml>
+<!--
+South West Point
+LAT -> deg=47, min=40, seconds=30.33 N
+LON -> deg=116, min=47, seconds=45.68 W
+eye_alt -> 2476 ft
+
+North West Point
+LAT -> deg=47, min=40, seconds=31.18 N
+LON -> deg=116, min=47, seconds=46.31 W
+eye_alt -> 2476 ft
+
+North East Point
+LAT -> deg=47, min=40, seconds=31.44 N
+LON -> deg=116, min=47, seconds=46.31 W
+eye_alt -> 2476 ft
+
+South East Point
+LAT -> deg=47, min=40, seconds=31.44 N
+LON -> deg=116, min=47, seconds=46.31 W
+eye_alt -> 2476 ft
+-->
