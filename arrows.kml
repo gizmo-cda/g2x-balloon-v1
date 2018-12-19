@@ -1,0 +1,34 @@
+<!--
+https://developers.google.com/kml/documentation/kmlreference#gxtrack
+
+Arrows
+http://mathgis.blogspot.com/2011/10/how-to-make-arrow-objects-for-google.html
+
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2">
+  <Document>
+    <Style id="transBluePoly">
+      <LineStyle>
+        <width>1.5</width>
+      </LineStyle>
+      <PolyStyle>
+        <color>7dff0000</color>
+      </PolyStyle>
+    </Style>
+<MultiGeometry> 
+<LineString> 
+<tessellate>1</tessellate> 
+<coordinates> 
+-117.093195026,34.116408002,0 -117.020521006,34.0741018797,0 
+</coordinates> 
+</LineString> 
+<LineString> 
+<tessellate>1</tessellate> 
+<coordinates> 
+-117.042636322,34.0757361767,0 -117.020521006,34.0741018797,0 -117.029869517, 34.0907835742, 0 
+</coordinates> 
+</LineString> 
+</MultiGeometry> 
+  </Document>
+</kml>
