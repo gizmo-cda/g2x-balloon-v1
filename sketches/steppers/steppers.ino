@@ -6,6 +6,10 @@ volatile boolean clk = false;
 volatile long counter = 0;
 
 void setup() {
+  // start serial for output
+  Serial.begin(9600);
+  Serial.println(TOTAL_REV_STEPS);
+  
   // set pins as outputs
   pinMode(9, OUTPUT);
 
