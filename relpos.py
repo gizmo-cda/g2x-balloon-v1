@@ -48,7 +48,7 @@ class out_look_at(_typing.NamedTuple):
     unit_vector_axis_of_rotation: xyz
     unit_vector_to_target: xyz
 
-#-------ripped from gps\wgs84-to-ecef.py--------
+#-------below ripped from gps\wgs84-to-ecef.py--------
 
 # major/minor axes in meters
 semi_major_axis = 6_378_137  # m
@@ -71,7 +71,7 @@ def wgs84_to_ecef(wgs84: wgs84tup):
         y=(N + wgs84.elevation_m) * _math.cos(wgs84.latitude_rad) * _math.sin(wgs84.longitude_rad),
         z=((1.0 - ee) * N + wgs84.elevation_m) * _math.sin(wgs84.latitude_rad),
     )
-#-------ripped from gps\wgs84-to-ecef.py--------
+#-------above ripped from gps\wgs84-to-ecef.py--------
 
 def delta_xyz(curr_xyz, targ_xyz):
     delta_x = float(targ_xyz.x - curr_xyz.x)

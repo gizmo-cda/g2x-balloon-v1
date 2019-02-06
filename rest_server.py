@@ -32,7 +32,8 @@ or using only python
     lat = '10 '; lat_compass = 'W'
     lng = '10 '; lng_compass = 'W'
     alt = '10 '
-    url="http://10.10.107.188:8000/"
+    url="http://10.10.107.98:8000/"
+    url="http://localhost:8000/"
     header={'Content-Type': 'application/json' }
     data={
         'latitude': lat + lat_compass,
@@ -40,6 +41,7 @@ or using only python
         'altitude': alt + 'm'
     }
     req = requests.post(url, headers=header, data=json.dumps(data))
+    print(requests.get(url, ).content.decode())
 """
 import pytest
 from http.server import HTTPServer, BaseHTTPRequestHandler
@@ -52,6 +54,27 @@ import json as _json
 
 import relpos as _relpos
 import pdb
+
+north_east_lat = _relpos.latlon(deg=47, minute=40, second=32.56, hemisphere='N')
+north_east_lon = _relpos.latlon(deg=116, minute=47, second=42.06, hemisphere='W')
+north_west_lat = _relpos.latlon(deg=47, minute=40, second=31.96, hemisphere='N')
+north_west_lon = _relpos.latlon(deg=116, minute=47, second=45.67, hemisphere='W')
+south_west_lat = _relpos.latlon(deg=47, minute=40, second=30.27, hemisphere='N')
+south_west_lon = _relpos.latlon(deg=116, minute=47, second=45.70, hemisphere='W')
+south_east_lat = _relpos.latlon(deg=47, minute=40, second=30.24, hemisphere='N')
+south_east_lon = _relpos.latlon(deg=116, minute=47, second=44.21, hemisphere='W')
+altitude_above_ground_m = 0.3048 * 100  # m/ft * ft
+ne_pt = _relpos.wgs84tup(
+    latitude_rad=_relpos.conv_deghms_2_radians(**north_east_lat._asdict()),
+    longitude_rad=_relpos.conv_deghms_2_radians(**north_east_lon._asdict()),
+    elevation_m=altitude_above_ground_m,
+)
+se_pt = _relpos.wgs84tup(
+    latitude_rad=_relpos.conv_deghms_2_radians(**south_east_lat._asdict()),
+    longitude_rad=_relpos.conv_deghms_2_radians(**south_east_lon._asdict()),
+    elevation_m=altitude_above_ground_m,
+)
+
 
 def write_move_gps_state(fp_abs, gps):
     """
@@ -98,18 +121,62 @@ def kml_byte_str_random(*args, **kwargs):
     return kml
 
 def kml_byte_str(gps1, gps2, ):
-    kml = (
-       '<?xml version="1.0" encoding="UTF-8"?>\n'
-       '<kml xmlns="http://www.opengis.net/kml/2.2">\n'
-       '<Placemark>\n'
-       '<name>Random Placemark</name>\n'
-       '<Point>\n'
-       '<coordinates>%d,%d</coordinates>\n'
-       '</Point>\n'
-       '</Placemark>\n'
-       '</kml>'
-       ) % (gps1.longitude_rad, gps1.latitude_rad)
+    kml = \
+f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Document.kml</name>
+  <open>1</open>
+  <Style id="exampleStyleDocument">
+    <LabelStyle>
+      <color>ff0000cc</color>
+    </LabelStyle>
+  </Style>
+  <Placemark>
+    <name>Document Feature 1</name>
+    <styleUrl>#exampleStyleDocument</styleUrl>
+    <Point>
+      <coordinates>-122.371,37.816,0</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>Document Feature 2</name>
+    <styleUrl>#exampleStyleDocument</styleUrl>
+    <Point>
+      <coordinates>-122.370,37.817,0</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>"""
+    kml = \
+f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>Document.kml</name>
+  <open>1</open>
+  <Style id="exampleStyleDocument">
+    <LabelStyle>
+      <color>ff0000cc</color>
+    </LabelStyle>
+  </Style>
+  <Placemark>
+    <name>Document Feature 1</name>
+    <styleUrl>#exampleStyleDocument</styleUrl>
+    <Point>
+      <coordinates>{gps1.latitude_rad:f},{gps1.longitude_rad:f},{gps1.elevation_m:f}</coordinates>
+    </Point>
+  </Placemark>
+  <Placemark>
+    <name>Document Feature 2</name>
+    <styleUrl>#exampleStyleDocument</styleUrl>
+    <Point>
+      <coordinates>{gps2.latitude_rad:f},{gps2.longitude_rad:f},{gps2.elevation_m:f}</coordinates>
+    </Point>
+  </Placemark>
+</Document>
+</kml>"""
     return kml
+
 
 class TwoGps(object):
     def __init__(self, state_dir=None, gps1=None, gps2=None):
@@ -129,9 +196,11 @@ class TwoGps(object):
         self.gps2_state_fpabs = self.state_dir / 'gps2_state.tsv'
         if gps1 is None:
             gps1 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
-        self.gps1 = gps1
+            gps1 = ne_pt
         if gps2 is None:
             gps2 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
+            gps2 = se_pt
+        self.gps1 = gps1
         self.gps2 = gps2
 
 
@@ -171,6 +240,7 @@ class StoreHandler(BaseHTTPRequestHandler):
         self.end_headers()
         # self.wfile.write(fh.read().encode())
         kml_bytes = self.two_gps.gen_kml_str().encode()
+#        self.wfile.write(b"hey GET this code")
         self.wfile.write(kml_bytes)
 
     def do_POST(self):
@@ -270,7 +340,7 @@ PORT = 8000
 if False:
     httpd = HTTPServer(('localhost', PORT), StoreHandler)
     httpd.serve_forever()
-elif not True and __name__ == '__main__':
+elif True and __name__ == '__main__':
     with socketserver.TCPServer(
                 # server_address=("127.0.0.1", PORT),
                 server_address=("", PORT),
