@@ -29,11 +29,12 @@ curl -d "foo=bar&bin=go" http://localhost:8000
 or using only python
 
     import json; import requests
+    url="http://10.10.107.98:8000/"
+    url="http://localhost:8000/"
+    print(requests.get(url, ).content.decode())
     lat = '10 '; lat_compass = 'W'
     lng = '10 '; lng_compass = 'W'
     alt = '10 '
-    url="http://10.10.107.98:8000/"
-    url="http://localhost:8000/"
     header={'Content-Type': 'application/json' }
     data={
         'latitude': lat + lat_compass,
@@ -41,194 +42,23 @@ or using only python
         'altitude': alt + 'm'
     }
     req = requests.post(url, headers=header, data=json.dumps(data))
-    print(requests.get(url, ).content.decode())
 """
 import pytest
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import socketserver
 from io import BytesIO
 import pathlib as _pathlib
-import inspect as _inspect
-import json as _json
 
 
 import relpos as _relpos
+import kmlgps as _kmlgps
 import pdb
-
-north_east_lat = _relpos.latlon(deg=47, minute=40, second=32.56, hemisphere='N')
-north_east_lon = _relpos.latlon(deg=116, minute=47, second=42.06, hemisphere='W')
-north_west_lat = _relpos.latlon(deg=47, minute=40, second=31.96, hemisphere='N')
-north_west_lon = _relpos.latlon(deg=116, minute=47, second=45.67, hemisphere='W')
-south_west_lat = _relpos.latlon(deg=47, minute=40, second=30.27, hemisphere='N')
-south_west_lon = _relpos.latlon(deg=116, minute=47, second=45.70, hemisphere='W')
-south_east_lat = _relpos.latlon(deg=47, minute=40, second=30.24, hemisphere='N')
-south_east_lon = _relpos.latlon(deg=116, minute=47, second=44.21, hemisphere='W')
-altitude_above_ground_m = 0.3048 * 100  # m/ft * ft
-ne_pt = _relpos.wgs84tup(
-    latitude_rad=_relpos.conv_deghms_2_radians(**north_east_lat._asdict()),
-    longitude_rad=_relpos.conv_deghms_2_radians(**north_east_lon._asdict()),
-    elevation_m=altitude_above_ground_m,
-)
-se_pt = _relpos.wgs84tup(
-    latitude_rad=_relpos.conv_deghms_2_radians(**south_east_lat._asdict()),
-    longitude_rad=_relpos.conv_deghms_2_radians(**south_east_lon._asdict()),
-    elevation_m=altitude_above_ground_m,
-)
-
-
-def write_move_gps_state(fp_abs, gps):
-    """
-    Moves are atomic, writing a file is not.  Want to write to temp file and
-    then move the file to the final file path absolute location.
-    refer to https://realpython.com/python-pathlib/#reading-and-writing-files
-
-    JSON + namedtuple
-    https://stackoverflow.com/questions/28148260/writing-and-reading-namedtuple-into-a-file-in-python/28149664#28149664
-
-    Interesting module but KISS for this instance
-    https://github.com/ltworf/typedload
-    """
-    tmp_fp_abs = fp_abs.parent / f'tmp-{fp_abs.name:s}'
-    state_text = _json.dumps(gps._asdict())  # uses ordered dict
-    tmp_fp_abs.write_text(state_text)
-    tmp_fp_abs.replace(fp_abs)  # deletes the tmp file
-
-def read_gps_state(fp_abs):
-    state_text = fp_abs.read_text()
-    gps_pt = _relpos.wgs84tup(**_json.loads(state_text))
-    return gps_pt
-
-def kml_byte_str_random(*args, **kwargs):
-    """
-    writes the KML Google Earth displays
-    """
-    #gps1 = latitude_rad, longitude_rad, elevation_m
-    import random
-
-    latitude = random.randrange(-90, 90)
-    longitude = random.randrange(-180, 180)
-    kml = (
-       '<?xml version="1.0" encoding="UTF-8"?>\n'
-       '<kml xmlns="http://www.opengis.net/kml/2.2">\n'
-       '<Placemark>\n'
-       '<name>Random Placemark</name>\n'
-       '<Point>\n'
-       '<coordinates>%d,%d</coordinates>\n'
-       '</Point>\n'
-       '</Placemark>\n'
-       '</kml>'
-       ) %(longitude, latitude)
-    return kml
-
-def kml_byte_str(gps1, gps2, ):
-    kml = \
-f"""<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-<Document>
-  <name>Document.kml</name>
-  <open>1</open>
-  <Style id="exampleStyleDocument">
-    <LabelStyle>
-      <color>ff0000cc</color>
-    </LabelStyle>
-  </Style>
-  <Placemark>
-    <name>Document Feature 1</name>
-    <styleUrl>#exampleStyleDocument</styleUrl>
-    <Point>
-      <coordinates>-122.371,37.816,0</coordinates>
-    </Point>
-  </Placemark>
-  <Placemark>
-    <name>Document Feature 2</name>
-    <styleUrl>#exampleStyleDocument</styleUrl>
-    <Point>
-      <coordinates>-122.370,37.817,0</coordinates>
-    </Point>
-  </Placemark>
-</Document>
-</kml>"""
-    kml = \
-f"""<?xml version="1.0" encoding="UTF-8"?>
-<kml xmlns="http://www.opengis.net/kml/2.2">
-<Document>
-  <name>Document.kml</name>
-  <open>1</open>
-  <Style id="exampleStyleDocument">
-    <LabelStyle>
-      <color>ff0000cc</color>
-    </LabelStyle>
-  </Style>
-  <Placemark>
-    <name>Document Feature 1</name>
-    <styleUrl>#exampleStyleDocument</styleUrl>
-    <Point>
-      <coordinates>{gps1.latitude_rad:f},{gps1.longitude_rad:f},{gps1.elevation_m:f}</coordinates>
-    </Point>
-  </Placemark>
-  <Placemark>
-    <name>Document Feature 2</name>
-    <styleUrl>#exampleStyleDocument</styleUrl>
-    <Point>
-      <coordinates>{gps2.latitude_rad:f},{gps2.longitude_rad:f},{gps2.elevation_m:f}</coordinates>
-    </Point>
-  </Placemark>
-</Document>
-</kml>"""
-    return kml
-
-
-class TwoGps(object):
-    def __init__(self, state_dir=None, gps1=None, gps2=None):
-        if state_dir is not None:
-            self.state_dir = _pathlib.Path(state_dir)
-        else:
-            # modern py3.4+ way to get the __file__ directory
-            # when running from site-packages can get irradic behavior
-            # https://stackoverflow.com/questions/3718657/how-to-properly-determine-current-script-directory
-            filename = _inspect.getframeinfo(_inspect.currentframe()).filename
-            self.state_dir = _pathlib.Path(filename).resolve().parent
-            self.state_dir /= 'state_dir'
-
-        if not self.state_dir.exists() and self.state_dir.parent.exists():
-            self.state_dir.mkdir(parents=False, exist_ok=True)
-        self.gps1_state_fpabs = self.state_dir / 'gps1_state.tsv'
-        self.gps2_state_fpabs = self.state_dir / 'gps2_state.tsv'
-        if gps1 is None:
-            gps1 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
-            gps1 = ne_pt
-        if gps2 is None:
-            gps2 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
-            gps2 = se_pt
-        self.gps1 = gps1
-        self.gps2 = gps2
-
-
-    @property  # https://www.programiz.com/python-programming/property
-    def gps1(self):
-        return read_gps_state(fp_abs=self.gps1_state_fpabs)
-
-    @property  # https://www.programiz.com/python-programming/property
-    def gps2(self):
-        return read_gps_state(fp_abs=self.gps2_state_fpabs)
-
-    @gps1.setter  # https://www.programiz.com/python-programming/property
-    def gps1(self, value):
-        write_move_gps_state(fp_abs=self.gps1_state_fpabs, gps=value)
-
-    @gps2.setter  # https://www.programiz.com/python-programming/property
-    def gps2(self, value):
-        write_move_gps_state(fp_abs=self.gps2_state_fpabs, gps=value)
-
-    def gen_kml_str(self):
-        byte_str = kml_byte_str(gps1=self.gps1, gps2=self.gps2, )
-        return byte_str
 
 
 
 class StoreHandler(BaseHTTPRequestHandler):
     #store_path = pjoin(curdir, 'store.json')
-    two_gps = TwoGps()
+    two_gps = _kmlgps.TwoGps()
     # kml_bytes = two_gps.gen_kml_str().encode()
 
     def do_GET(self):
@@ -239,7 +69,7 @@ class StoreHandler(BaseHTTPRequestHandler):
         #print 'Content-Type: application/vnd.google-earth.kml+xml\n'
         self.end_headers()
         # self.wfile.write(fh.read().encode())
-        kml_bytes = self.two_gps.gen_kml_str().encode()
+        kml_bytes = self.two_gps.gen_kml_byte_str()
 #        self.wfile.write(b"hey GET this code")
         self.wfile.write(kml_bytes)
 
@@ -274,7 +104,7 @@ class StoreHandler(BaseHTTPRequestHandler):
 #        response.write(body)
 #        self.wfile.write(response.getvalue())
 
-if True and __name__ == '__main__':
+if False and __name__ == '__main__':
     # center parking line north cement meridian end barrier
     lat1 = _relpos.latlon(deg=47, minute=40, second=32.63, hemisphere='N')
     lon1 = _relpos.latlon(deg=116, minute=47, second=43.07, hemisphere='W')
@@ -295,13 +125,13 @@ if True and __name__ == '__main__':
         elevation_m=elevation_m2,
     )
 
-    tgps = TwoGps(gps1=_gps1, gps2=_gps2)
+    tgps = _kmlgps.TwoGps(gps1=_gps1, gps2=_gps2)
     lat1_rad = _gps1.latitude_rad
     lon1_rad = _gps1.longitude_rad
     lat2_rad = _gps2.latitude_rad
     lon2_rad = _gps2.longitude_rad
 
-if True and __name__ == '__main__':  # gizmo-cda building polygon
+if False and __name__ == '__main__':  # gizmo-cda building polygon
     north_east_lat = _relpos.latlon(deg=47, minute=40, second=32.56, hemisphere='N')
     north_east_lon = _relpos.latlon(deg=116, minute=47, second=42.06, hemisphere='W')
     north_west_lat = _relpos.latlon(deg=47, minute=40, second=31.96, hemisphere='N')

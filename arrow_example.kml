@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+	<name>KmlFile</name>
+	<Style id="example0">
+		<IconStyle>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/arrow.png</href>
+			</Icon>
+			<heading>0</heading>
+		</IconStyle>
+	</Style>
+	<Style id="example_hdg90">
+		<IconStyle>
+			<Icon>
+				<href>http://maps.google.com/mapfiles/kml/shapes/arrow.png</href>
+			</Icon>
+			<heading>90</heading>
+		</IconStyle>
+	</Style>
+	<Placemark>
+		<name>Untitled Placemark</name>
+		<styleUrl>#example0</styleUrl>
+		<Point>
+			<coordinates>0.02571273097565196,51.05636229703402,0</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark>
+		<name>PHdg90</name>
+		<styleUrl>#example_hdg90</styleUrl>
+		<Point>
+			<coordinates>0.12571273097565196,51.05636229703402,0</coordinates>
+		</Point>
+	</Placemark>
+</Document>
+</kml>
+<!-- https://productforums.google.com/forum/#!topic/earth/I668BTY7AP4 -->
