@@ -32,6 +32,7 @@ class wgs84tup(_typing.NamedTuple):
 
     @property
     def google_earth_pts(self):
+        return f"{self.longitude_rad:f},{self.latitude_rad:f},{self.elevation_m:f}"
         elev_ft = self.elevation_m / 0.3048  # m / (m / ft)
         lat_deg = _math.degrees(self.latitude_rad)
         long_deg = _math.degrees(self.longitude_rad)
@@ -144,7 +145,7 @@ def conv_deghms_2_radians(deg, minute, second, hemisphere):
     """
     deg_all = deg + (minute / 60.) + (second / 3600.)
     rad_all = _math.radians(deg_all)
-    if hemisphere.lower() in ('S', 'W'):
+    if hemisphere.lower() in ('s', 'w'):
         rad_all *= -1
     return rad_all
 
