@@ -3,6 +3,8 @@
 """
 general object to handle relative positioning
 
+* https://www.whatsmygps.com/
+
 * note on surface normal: http://www.geo.hunter.cuny.edu/~jochen/GTECH201/Lectures/Lec6concepts/05%20-%20Understanding%20datums.html
 * good article on wg84 history: https://frontierprecision.com/wp-content/uploads/EvolutionofWGS84andNAD83.pdf
 
@@ -17,18 +19,60 @@ import math as _math
 import numpy as _np
 import math as math
 
-class latlon(_typing.NamedTuple):
+
+def conv_deghms_2_radians(deg, minute, second, hemisphere):
+    r"""
+    gps annotations:
+        ° : degree
+        ' : minute
+        " : second
+    1 degree is equal to 1 hour, that is equal to 60 minutes or 3600 seconds.
+    To calculate decimal degrees, we use the DMS to decimal degree formula below:
+    Decimal Degrees = degrees + (minutes/60) + (seconds/3600)
+    source: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees
+
+    hemisphere is relative to the prime meridian
+    https://msdn.microsoft.com/en-us/library/aa578799.aspx
+    """
+    deg_all = deg + (minute / 60.) + (second / 3600.)
+    rad_all = _math.radians(deg_all)
+    if hemisphere.lower() in ('s', 'w'):
+        if rad_all < 0:
+            pass
+        else:
+            rad_all *= -1.
+    return rad_all
+
+
+class LatLonDHMS(_typing.NamedTuple):
     deg: float
     minute: float
     second: float
     hemisphere: _typing.AnyStr
+    
+    def conv_deghms_2_radians(self):
+        rad_comb = conv_deghms_2_radians(
+            deg=self.deg,
+            minute=self.minute,
+            second=self.second,
+            hemisphere=self.hemisphere,
+        )
+        return rad_comb
 
 # http://spatialreference.org/ref/epsg/4326/
 # WGS84 Bounds: -180.0000, -90.0000, 180.0000, 90.0000
 class wgs84tup(_typing.NamedTuple):
-    longitude_rad: float
-    latitude_rad: float
-    elevation_m: float
+    long_dhms: LatLonDHMS
+    lat_dhms: LatLonDHMS
+    elev_m: float
+
+    @property
+    def longitude_rad(self):
+        return self.long_dhms.conv_deghms_2_radians()
+
+    @property
+    def latitude_rad(self):
+        return self.long_dhms.conv_deghms_2_radians()
 
     @property
     def google_earth_pts(self):
@@ -68,9 +112,9 @@ def wgs84_to_ecef(wgs84: wgs84tup):
     N = prime_vertical_radius_of_curvature(wgs84.latitude_rad)
 
     return xyz(
-        x=(N + wgs84.elevation_m) * _math.cos(wgs84.latitude_rad) * _math.cos(wgs84.longitude_rad),
-        y=(N + wgs84.elevation_m) * _math.cos(wgs84.latitude_rad) * _math.sin(wgs84.longitude_rad),
-        z=((1.0 - ee) * N + wgs84.elevation_m) * _math.sin(wgs84.latitude_rad),
+        x=(N + wgs84.elev_m) * _math.cos(wgs84.latitude_rad) * _math.cos(wgs84.longitude_rad),
+        y=(N + wgs84.elev_m) * _math.cos(wgs84.latitude_rad) * _math.sin(wgs84.longitude_rad),
+        z=((1.0 - ee) * N + wgs84.elev_m) * _math.sin(wgs84.latitude_rad),
     )
 #-------above ripped from gps\wgs84-to-ecef.py--------
 
@@ -128,26 +172,6 @@ def look_at(current_pos, target_pos, current_view_unit=xyz(x=1, y=0, z=0)):
         unit_vector_axis_of_rotation=rot_vector,
         unit_vector_to_target=ntarget,
     )
-
-def conv_deghms_2_radians(deg, minute, second, hemisphere):
-    r"""
-    gps annotations:
-        ° : degree
-        ' : minute
-        " : second
-    1 degree is equal to 1 hour, that is equal to 60 minutes or 3600 seconds.
-    To calculate decimal degrees, we use the DMS to decimal degree formula below:
-    Decimal Degrees = degrees + (minutes/60) + (seconds/3600)
-    source: https://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees
-
-    hemisphere is relative to the prime meridian
-    https://msdn.microsoft.com/en-us/library/aa578799.aspx
-    """
-    deg_all = deg + (minute / 60.) + (second / 3600.)
-    rad_all = _math.radians(deg_all)
-    if hemisphere.lower() in ('s', 'w'):
-        rad_all *= -1
-    return rad_all
 
 # Calculates Rotation Matrix given euler angles.
 def eulerAnglesToRotationMatrix(theta):
@@ -236,24 +260,16 @@ def gps_rel_positions(gps1: wgs84tup, gps2: wgs84tup):
 
 if __name__ == '__main__':
     # center parking line north cement meridian end barrier
-    lat1 = latlon(deg=47, minute=40, second=32.63, hemisphere='N')
-    lon1 = latlon(deg=116, minute=47, second=43.07, hemisphere='W')
+    lat1 = LatLonDHMS(deg=47, minute=40, second=32.63, hemisphere='N')
+    lon1 = LatLonDHMS(deg=116, minute=47, second=43.07, hemisphere='W')
     elevation_m1 = 2139 * 0.3048  # ft * 0.3048 -> m
-    gps1 = wgs84tup(
-        latitude_rad=conv_deghms_2_radians(**lat1._asdict()),
-        longitude_rad=conv_deghms_2_radians(**lon1._asdict()),
-        elevation_m=elevation_m1,
-    )
+    gps1 = wgs84tup(lat_dhms=lat1, long_dhms=lon1, elev_m=elevation_m1, )
 
     # center parking line south cement meridian end barrier farthest east point
-    lat2 = latlon(deg=47, minute=40, second=30.93, hemisphere='N')
-    lon2 = latlon(deg=116, minute=47, second=42.54, hemisphere='W')
+    lat2 = LatLonDHMS(deg=47, minute=40, second=30.93, hemisphere='N')
+    lon2 = LatLonDHMS(deg=116, minute=47, second=42.54, hemisphere='W')
     elevation_m2 = 2140 * 0.3048  # ft * 0.3048 -> m
-    gps2 = wgs84tup(
-        latitude_rad=conv_deghms_2_radians(**lat2._asdict()),
-        longitude_rad=conv_deghms_2_radians(**lon2._asdict()),
-        elevation_m=elevation_m2,
-    )
+    gps2 = wgs84tup(lat_dhms=lat2, long_dhms=lon2, elev_m=elevation_m2, )
 
     rot_matrix = eulerAnglesToRotationMatrix(theta=[_math.pi/2,_math.pi/2,0])
     rotationMatrixToEulerAngles(R=rot_matrix)

@@ -57,7 +57,10 @@ class TwoGps(object):
 
     def gen_kml_byte_str(self):
 #        byte_str = kml_byte_str(gps1=self.gps1, gps2=self.gps2, )
-        kml_str = KML().make_kml_rev1(attenna_gps=self.gps1, balloon_gps=self.gps2, )
+        kml_str = KML().make_kml_rev1(
+            attenna_gps=self.gps1,
+            balloon_gps=self.gps2,
+        )
         byte_str = kml_str.encode()
         return byte_str
 
