@@ -69,7 +69,8 @@ class StoreHandler(BaseHTTPRequestHandler):
         #print 'Content-Type: application/vnd.google-earth.kml+xml\n'
         self.end_headers()
         # self.wfile.write(fh.read().encode())
-        kml_bytes = self.two_gps.gen_kml_byte_str()
+#        kml_bytes = self.two_gps.gen_kml_byte_str()
+        kml_bytes = _kmlgps.GizmoHq.kml_gizmo_hq().encode()
 #        self.wfile.write(b"hey GET this code")
         self.wfile.write(kml_bytes)
 

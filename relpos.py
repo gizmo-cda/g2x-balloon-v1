@@ -72,11 +72,21 @@ class wgs84tup(_typing.NamedTuple):
 
     @property
     def latitude_rad(self):
-        return self.long_dhms.conv_deghms_2_radians()
+        return self.lat_dhms.conv_deghms_2_radians()
 
+    def placemark(self, styleUrl='#YellowPinStyle', ):
+        return f"""  <Placemark>
+    <name>Document Feature 2</name>
+    <styleUrl>#YellowPinStyle</styleUrl>
+    <Point>
+      <coordinates>{self.google_earth_pts:s}</coordinates>
+    </Point>
+  </Placemark>"""
+
+    
     @property
     def google_earth_pts(self):
-        return f"{self.longitude_rad:f},{self.latitude_rad:f},{self.elevation_m:f}"
+        return f"{self.longitude_rad:f},{self.latitude_rad:f},{self.elev_m:f}"
         elev_ft = self.elevation_m / 0.3048  # m / (m / ft)
         lat_deg = _math.degrees(self.latitude_rad)
         long_deg = _math.degrees(self.longitude_rad)

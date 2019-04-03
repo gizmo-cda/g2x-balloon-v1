@@ -30,10 +30,10 @@ class TwoGps(object):
         self.gps1_state_fpabs = self.state_dir / 'gps1_state.tsv'
         self.gps2_state_fpabs = self.state_dir / 'gps2_state.tsv'
         if gps1 is None:
-            gps1 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
+            #gps1 = _relpos.wgs84tup(lat_dhms=0., longitude_rad=0., elevation_m=0.)
             gps1 = GizmoHq.ne_pt
         if gps2 is None:
-            gps2 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
+            #gps2 = _relpos.wgs84tup(latitude_rad=0., longitude_rad=0., elevation_m=0.)
             gps2 = GizmoHq.se_pt
         self.gps1 = gps1
         self.gps2 = gps2
@@ -67,37 +67,58 @@ class TwoGps(object):
 
 
 class GizmoHq():
-    north_east_lat = _relpos.latlon(deg=47, minute=40, second=32.56, hemisphere='N')
-    north_east_lon = _relpos.latlon(deg=116, minute=47, second=42.06, hemisphere='W')
-    north_west_lat = _relpos.latlon(deg=47, minute=40, second=31.96, hemisphere='N')
-    north_west_lon = _relpos.latlon(deg=116, minute=47, second=45.67, hemisphere='W')
-    south_west_lat = _relpos.latlon(deg=47, minute=40, second=30.27, hemisphere='N')
-    south_west_lon = _relpos.latlon(deg=116, minute=47, second=45.70, hemisphere='W')
-    south_east_lat = _relpos.latlon(deg=47, minute=40, second=30.24, hemisphere='N')
-    south_east_lon = _relpos.latlon(deg=116, minute=47, second=44.21, hemisphere='W')
+    north_east_lat = _relpos.LatLonDHMS(deg=47, minute=40, second=32.56, hemisphere='N')
+    north_east_lon = _relpos.LatLonDHMS(deg=116, minute=47, second=42.06, hemisphere='W')
+    north_west_lat = _relpos.LatLonDHMS(deg=47, minute=40, second=31.96, hemisphere='N')
+    north_west_lon = _relpos.LatLonDHMS(deg=116, minute=47, second=45.67, hemisphere='W')
+    south_west_lat = _relpos.LatLonDHMS(deg=47, minute=40, second=30.27, hemisphere='N')
+    south_west_lon = _relpos.LatLonDHMS(deg=116, minute=47, second=45.70, hemisphere='W')
+    south_east_lat = _relpos.LatLonDHMS(deg=47, minute=40, second=30.24, hemisphere='N')
+    south_east_lon = _relpos.LatLonDHMS(deg=116, minute=47, second=44.21, hemisphere='W')
 
     altitude_above_ground_m = 0.3048 * 100  # m/ft * ft
 
     ne_pt = _relpos.wgs84tup(
-        latitude_rad=_relpos.conv_deghms_2_radians(**north_east_lat._asdict()),
-        longitude_rad=_relpos.conv_deghms_2_radians(**north_east_lon._asdict()),
-        elevation_m=altitude_above_ground_m,
+        lat_dhms=north_east_lat,
+        long_dhms=north_east_lon,
+        elev_m=altitude_above_ground_m,
     )
     nw_pt = _relpos.wgs84tup(
-        latitude_rad=_relpos.conv_deghms_2_radians(**north_west_lat._asdict()),
-        longitude_rad=_relpos.conv_deghms_2_radians(**north_west_lon._asdict()),
-        elevation_m=altitude_above_ground_m,
+        lat_dhms=north_west_lat,
+        long_dhms=north_west_lon,
+        elev_m=altitude_above_ground_m,
     )
     sw_pt = _relpos.wgs84tup(
-        latitude_rad=_relpos.conv_deghms_2_radians(**south_west_lat._asdict()),
-        longitude_rad=_relpos.conv_deghms_2_radians(**south_west_lon._asdict()),
-        elevation_m=altitude_above_ground_m,
+        lat_dhms=south_west_lat,
+        long_dhms=south_west_lon,
+        elev_m=altitude_above_ground_m,
     )
     se_pt = _relpos.wgs84tup(
-        latitude_rad=_relpos.conv_deghms_2_radians(**south_east_lat._asdict()),
-        longitude_rad=_relpos.conv_deghms_2_radians(**south_east_lon._asdict()),
-        elevation_m=altitude_above_ground_m,
+        lat_dhms=south_east_lat,
+        long_dhms=south_east_lon,
+        elev_m=altitude_above_ground_m,
     )
+
+    @classmethod
+    def kml_gizmo_hq(cls):
+        return f"""<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+  <name>kml_template-multiple.kml</name>
+  <open>1</open>
+  <Style id="YellowPinStyle">
+    <LabelStyle>
+      <color>ff0000cc</color>
+    </LabelStyle>
+  </Style>
+{cls.kml_multiple_pts():s}
+</Document>
+</kml>"""
+
+
+    @classmethod
+    def kml_multiple_pts(cls):
+        return "\n".join([gps.placemark() for gps in cls.four_corners()])
 
     @classmethod
     def four_corners(cls):
